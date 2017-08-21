@@ -45,17 +45,7 @@ class App extends Component {
                   </a>
                 </p>
               </div>
-              <div className="level-right">
-                <Categories prop={this.props.categories} />
-                <div className="level-item">Sort:</div>
-                <div className="level-item">
-                  <span className="select">
-                    <select>
-                      <option>Date created</option>
-                    </select>
-                  </span>
-                </div>
-              </div>
+              <Categories categories={this.props.categories} />
             </nav>
           </div>
         </section>
