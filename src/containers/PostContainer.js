@@ -13,7 +13,7 @@ class PostContainer extends Component {
   }
 
   render() {
-    const {post, upVote, downVote} = this.props
+    const { post, upVote, downVote } = this.props
     return (
       <Post key={post.id} post={post} upVote={upVote} downVote={downVote} />
     )
@@ -22,13 +22,9 @@ class PostContainer extends Component {
 
 function mapDispatchToProps(dispatch) {
   return {
-    upVote: (data) => dispatch(upVote(data)),
-    downVote: (data) => dispatch(downVote(data)),
+    upVote: data => dispatch(upVote(data)),
+    downVote: data => dispatch(downVote(data))
   }
 }
 
-export default connect(
-  null,
-  mapDispatchToProps
-)(PostContainer)
-  
+export default connect(null, mapDispatchToProps)(PostContainer)

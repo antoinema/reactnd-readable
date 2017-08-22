@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 function Post(props) {
-  const {post, upVote, downVote} = props
+  const { post, upVote, downVote } = props
   function handleUpVoteClick(e) {
     e.preventDefault()
     upVote(post)
@@ -22,22 +22,26 @@ function Post(props) {
         <nav className="level">
           <div className="level-item">
             <a onClick={handleUpVoteClick}>
-              <span className="icon is-small"><i className="fa fa-plus"></i></span>
+              <span className="icon is-small">
+                <i className="fa fa-plus" />
+              </span>
             </a>
           </div>
           <div className="level-item">
             <a onClick={handleDownVoteClick}>
-              <span className="icon is-small"><i className="fa fa-minus"></i></span>
+              <span className="icon is-small">
+                <i className="fa fa-minus" />
+              </span>
             </a>
           </div>
         </nav>
-
       </figure>
       <div className="media-content">
         <div className="content">
           <p>
-            <strong>{post.title}</strong> <small>{post.author}</small> <small>{post.timestamp}</small>
-            <br/>
+            <strong>{post.title}</strong> <small>{post.author}</small>{' '}
+            <small>{post.timestamp}</small>
+            <br />
             {post.body}
           </p>
         </div>
@@ -47,19 +51,18 @@ function Post(props) {
           <p className="control">
             <a className="button">
               <span className="icon is-small">
-                <i className="fa fa-trash"></i>
+                <i className="fa fa-trash" />
               </span>
             </a>
           </p>
           <p className="control">
             <a className="button">
               <span className="icon is-small">
-                <i className="fa fa-edit"></i>
+                <i className="fa fa-edit" />
               </span>
             </a>
           </p>
-        </div>  
-
+        </div>
       </div>
     </article>
   )

@@ -2,10 +2,10 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import PostContainer from '../containers/PostContainer'
 
-function List({posts}) {
+function List({ posts }) {
   return (
-    <div className="container">    
-      {posts.map((post) =>  <PostContainer key={post.id} post={post} />)}
+    <div className="container">
+      {posts.map(post => <PostContainer key={post.id} post={post} />)}
     </div>
   )
 }
