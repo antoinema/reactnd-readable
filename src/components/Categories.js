@@ -16,7 +16,7 @@ function Categories(props) {
           </select>
         </span>
       </div>
-  </div>
+    </div>
   )
 }
 

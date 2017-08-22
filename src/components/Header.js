@@ -1,0 +1,16 @@
+import React from 'react'
+
+const Header = () => {
+  return (
+    <section className="hero is-primary is-bold">
+      <div className="hero-body">
+        <div className="container">
+          <h1 className="title">Readable</h1>
+          <h2 className="subtitle">Anonymous content and comments!</h2>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+export default Header

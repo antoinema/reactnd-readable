@@ -3,79 +3,76 @@ import 'bulma/css/bulma.css'
 import 'font-awesome/css/font-awesome.min.css'
 import PropTypes from 'prop-types'
 import List from '../components/List'
-import { withRouter } from 'react-router-dom'
 import { fetchPosts } from '../actions/posts'
 import { fetchCategories } from '../actions/categories'
 import { connect } from 'react-redux'
 import Categories from '../components/Categories'
+import PostForm from '../components/PostForm'
+import Header from '../components/Header'
+import { Route, Link, withRouter } from 'react-router-dom'
 
 class App extends Component {
   componentDidMount() {
-    const {fetchPosts, fetchCategories} = this.props
+    const { fetchPosts, fetchCategories } = this.props
     fetchPosts()
     fetchCategories()
   }
-  render() {  
+  render() {
     return (
-      <div className="app">  
-        <section className="hero is-primary is-bold">
-          <div className="hero-body">
+      <div className="app">
+        <Route path="/" component={Header} />
+        <Route
+          exact
+          path="/"
+          render={() =>
             <div className="container">
-              <h1 className="title">
-                Readable
-              </h1>
-              <h2 className="subtitle">
-                Anonymous content and comments!
-              </h2>
-            </div>
-          </div>
-        </section>    
-        <section className="section">
-          <div className="container">
-            <nav className="level">
-              <div className="level-left">
-                <div className="level-item">
-                  <p className="title is-4">
-                    <strong>123</strong> posts
-                  </p>
+              <section className="section">
+                <div className="container">
+                  <nav className="level">
+                    <div className="level-left">
+                      <div className="level-item">
+                        <p className="title is-4">
+                          <strong>123</strong> posts
+                        </p>
+                      </div>
+                      <p className="level-item">
+                        <Link to="/posts/create" className="button is-primary">
+                          New
+                        </Link>
+                      </p>
+                    </div>
+                    <Categories categories={this.props.categories} />
+                  </nav>
                 </div>
-                <p className="level-item">
-                  <a className="button is-primary">
-                    New
-                  </a>
-                </p>
-              </div>
-              <Categories categories={this.props.categories} />
-            </nav>
-          </div>
-        </section>
-
-        <section className="section">
-          {this.props.isFetching ? 'Loading'
-            : <List posts={this.props.posts} />
-          }
-        </section>
+              </section>
+              <section className="section">
+                {this.props.isFetching
+                  ? 'Loading'
+                  : <List posts={this.props.posts} />}
+              </section>
+            </div>}
+        />
+        <Route path="/posts/create" component={PostForm} />
       </div>
-
-
-
     )
   }
 }
 
-function mapStateToProps({posts, categories}) {
-  const {isFetching, items} = posts
+function mapStateToProps({ posts, categories }) {
+  const { isFetching, items } = posts
   return {
     isFetching: isFetching,
     posts: items ? Object.keys(items).map(key => items[key]) : [],
-    categories: categories ? Object.keys(categories).map(key => categories[key]) : [],
+    categories: categories
+      ? Object.keys(categories).map(key => categories[key])
+      : []
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     fetchPosts: () => dispatch(fetchPosts()),
-    fetchCategories: () => dispatch(fetchCategories()),    
+    fetchCategories: () => dispatch(fetchCategories())
   }
 }
 
@@ -84,11 +81,7 @@ App.propTypes = {
   categories: PropTypes.array.isRequired,
   isFetching: PropTypes.bool.isRequired,
   fetchPosts: PropTypes.func.isRequired,
-  fetchCategories: PropTypes.func.isRequired,
+  fetchCategories: PropTypes.func.isRequired
 }
 
-export default withRouter(connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(App))
-
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App))
