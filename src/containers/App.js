@@ -7,7 +7,7 @@ import { fetchPosts } from '../actions/posts'
 import { fetchCategories } from '../actions/categories'
 import { connect } from 'react-redux'
 import Categories from '../components/Categories'
-import PostForm from '../components/PostForm'
+import PostFormContainer from '../containers/PostFormContainer'
 import Header from '../components/Header'
 import { Route, Link, withRouter } from 'react-router-dom'
 
@@ -52,7 +52,7 @@ class App extends Component {
               </section>
             </div>}
         />
-        <Route path="/posts/create" component={PostForm} />
+        <Route path="/posts/create" component={PostFormContainer} />
       </div>
     )
   }

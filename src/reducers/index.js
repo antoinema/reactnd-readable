@@ -1,20 +1,21 @@
 import { combineReducers } from 'redux'
 
-import {
-  REQUEST_POSTS,
-  RECEIVE_POSTS,
-} from '../actions/posts'
+import { REQUEST_POSTS, RECEIVE_POSTS } from '../actions/posts'
 
 import {
   UPVOTE_REQUEST,
   UPVOTE_SUCCESS,
   DOWNVOTE_REQUEST,
-  DOWNVOTE_SUCCESS,
+  DOWNVOTE_SUCCESS
 } from '../actions/posts'
 
+import { RECEIVE_CATEGORIES } from '../actions/categories'
+
 import {
-  RECEIVE_CATEGORIES,
-} from '../actions/categories'
+  INPUT_CHANGED,
+  SUBMIT_POST_REQUEST,
+  SUBMIT_POST_SUCCESS
+} from '../actions/postForm'
 
 // const initialState = {
 //   currentCategory: 'frontend',
@@ -78,14 +79,15 @@ const initialState = {
     42: {
       id: 42,
       title: 'Confusion about Flux and Relay',
-      comments: [2],
+      comments: [2]
     },
     100: {
       id: 100,
-      title: 'Creating a Simple Application Using React JS and Flux Architecture',
-      comments: null,
+      title:
+        'Creating a Simple Application Using React JS and Flux Architecture',
+      comments: null
     }
-  },
+  }
 }
 
 function posts(
@@ -99,13 +101,13 @@ function posts(
     case REQUEST_POSTS:
       return {
         ...state,
-        isFetching: true,
+        isFetching: true
       }
     case RECEIVE_POSTS:
       return {
         ...state,
         isFetching: false,
-        items: action.posts,
+        items: action.posts
       }
     case UPVOTE_REQUEST:
     case DOWNVOTE_REQUEST:
@@ -117,7 +119,7 @@ function posts(
           ...state['items'],
           [action.post.id]: {
             ...action.post,
-            voteScore: action.post.voteScore+1
+            voteScore: action.post.voteScore + 1
           }
         }
       }
@@ -128,7 +130,17 @@ function posts(
           ...state['items'],
           [action.post.id]: {
             ...action.post,
-            voteScore: action.post.voteScore-1
+            voteScore: action.post.voteScore - 1
+          }
+        }
+      }
+    case SUBMIT_POST_SUCCESS:
+      return {
+        ...state,
+        items: {
+          ...state['items'],
+          [action.post.id]: {
+            ...action.post
           }
         }
       }
@@ -138,7 +150,7 @@ function posts(
 }
 
 function allPosts(state = {}, action) {
-  switch (action.type) {    
+  switch (action.type) {
     case RECEIVE_POSTS:
     case REQUEST_POSTS:
       return posts(null, action)
@@ -149,10 +161,9 @@ function allPosts(state = {}, action) {
 
 function postsByCategory(state = {}, action) {
   switch (action.type) {
-      
     case RECEIVE_POSTS:
     case REQUEST_POSTS:
-      return { 
+      return {
         ...state,
         [action.category]: posts(state[action.category], action)
       }
@@ -170,10 +181,37 @@ function categories(state = {}, action) {
   }
 }
 
+function formPost(state = {}, action) {
+  switch (action.type) {
+    case INPUT_CHANGED:
+      return {
+        ...state,
+        fields: {
+          ...state['fields'],
+          ...action.fields
+        },
+        canSubmit: action.canSubmit
+      }
+    case SUBMIT_POST_REQUEST:
+      return {
+        ...state,
+        isSubmitting: true
+      }
+    case SUBMIT_POST_SUCCESS:
+      return {
+        ...state,
+        isSubmitting: false
+      }
+    default:
+      return state
+  }
+}
+
 const rootReducer = combineReducers({
   posts,
   postsByCategory,
   categories,
+  formPost
 })
 
 export default rootReducer

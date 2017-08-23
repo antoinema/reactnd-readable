@@ -31,3 +31,10 @@ export const getCategories = () =>
   fetch(`${api}/categories`, { headers }).then(res =>
     res.json().then(res => res.categories)
   )
+
+export const submitPost = ({ post }) =>
+  fetch(`${api}/posts/`, {
+    headers,
+    method: 'POST',
+    body: JSON.stringify(post)
+  }).then(response => response.json())
