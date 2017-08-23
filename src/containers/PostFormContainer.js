@@ -10,7 +10,10 @@ class PostFormContainer extends Component {
     const target = event.target
     const value = target.type === 'checkbox' ? target.checked : target.value
     const name = target.name
-    this.props.inputChanged({ [name]: value })
+    this.props.inputChanged({
+      fields: { [name]: value },
+      validation: { [name]: value.length > 0 }
+    })
   }
 
   handleSubmit = () => {
@@ -28,20 +31,40 @@ class PostFormContainer extends Component {
     submitPost(post)
   }
 
+  validate = validation => {
+    const fieldsValidationArray = Object.keys(validation).map(
+      key => validation[key]
+    )
+    return (
+      fieldsValidationArray.length === 4 &&
+      fieldsValidationArray.reduce(
+        (fieldsOk, isValid) => isValid && fieldsOk,
+        true
+      )
+    )
+  }
+
   render() {
+    const { validation, isSubmitting } = this.props
+    const canSubmit = this.validate(validation)
     return (
       <PostForm
         handleInputChange={this.handleInputChange}
         handleSubmit={this.handleSubmit}
+        canSubmit={canSubmit}
+        isSubmitting={isSubmitting}
+        validation={validation}
       />
     )
   }
 }
 
 function mapStateToProps({ formPost }) {
-  const { fields } = formPost
+  const { fields, isSubmitting, validation } = formPost
   return {
-    fields: fields ? fields : {}
+    fields,
+    isSubmitting,
+    validation
   }
 }
 
@@ -54,7 +77,9 @@ function mapDispatchToProps(dispatch) {
 PostFormContainer.propTypes = {
   inputChanged: PropTypes.func.isRequired,
   submitPost: PropTypes.func.isRequired,
-  fields: PropTypes.object.isRequired
+  fields: PropTypes.object.isRequired,
+  validation: PropTypes.object.isRequired,
+  isSubmitting: PropTypes.bool.isRequired
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PostFormContainer)

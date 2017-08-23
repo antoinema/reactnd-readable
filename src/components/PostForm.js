@@ -8,13 +8,16 @@ class PostForm extends Component {
   }
 
   render() {
+    const { canSubmit, isSubmitting, validation } = this.props
     return (
       <section className="section">
         <div className="field">
           <label className="label">Author</label>
-          <div className="control has-icons-left has-icons-right">
+          <div className="control has-icons-left">
             <input
-              className="input is-success"
+              className={`input ${validation.author == false // we use == as we don't want to show error when undefined (no user input)
+                ? 'is-danger'
+                : null}`}
               type="text"
               placeholder="Text input"
               name="author"
@@ -23,19 +26,19 @@ class PostForm extends Component {
             <span className="icon is-small is-left">
               <i className="fa fa-user" />
             </span>
-            <span className="icon is-small is-right">
-              <i className="fa fa-check" />
-            </span>
           </div>
-          <p className="help is-success">This username is available</p>
         </div>
 
         <div className="field">
           <label className="label">Category</label>
           <div className="control">
-            <div className="select">
+            <div
+              className={`select ${validation.category == false
+                ? 'is-danger'
+                : null}`}
+            >
               <select onChange={this.props.handleInputChange} name="category">
-                <option>Select dropdown</option>
+                <option value="">Select dropdown</option>
                 <option>With options</option>
               </select>
             </div>
@@ -46,7 +49,9 @@ class PostForm extends Component {
           <label className="label">Title</label>
           <div className="control">
             <input
-              className="input"
+              className={`input ${validation.title == false
+                ? 'is-danger'
+                : null}`}
               type="text"
               placeholder="Text input"
               onChange={this.props.handleInputChange}
@@ -57,7 +62,11 @@ class PostForm extends Component {
 
         <div className="field">
           <label className="label">Message</label>
-          <div className="control">
+          <div
+            className={`control ${validation.message == false
+              ? 'is-danger'
+              : null}`}
+          >
             <textarea
               className="textarea"
               placeholder="Textarea"
@@ -70,7 +79,10 @@ class PostForm extends Component {
         <div className="field is-grouped">
           <div className="control">
             <button
-              className="button is-primary"
+              className={`button is-primary ${isSubmitting
+                ? 'is-loading'
+                : null}`}
+              disabled={!canSubmit}
               onClick={this.props.handleSubmit}
             >
               Post
@@ -90,7 +102,10 @@ class PostForm extends Component {
 PostForm.propTypes = {
   handleInputChange: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
-  history: PropTypes.object
+  history: PropTypes.object,
+  canSubmit: PropTypes.bool.isRequired,
+  isSubmitting: PropTypes.bool.isRequired,
+  validation: PropTypes.object
 }
 
 export default withRouter(PostForm)

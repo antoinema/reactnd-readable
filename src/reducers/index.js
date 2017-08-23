@@ -181,7 +181,14 @@ function categories(state = {}, action) {
   }
 }
 
-function formPost(state = {}, action) {
+const initialFormState = {
+  fields: {},
+  validation: {},
+  canSubmit: false,
+  isSubmitting: false
+}
+
+function formPost(state = initialFormState, action) {
   switch (action.type) {
     case INPUT_CHANGED:
       return {
@@ -189,6 +196,10 @@ function formPost(state = {}, action) {
         fields: {
           ...state['fields'],
           ...action.fields
+        },
+        validation: {
+          ...state['validation'],
+          ...action.validation
         },
         canSubmit: action.canSubmit
       }

@@ -4,10 +4,11 @@ export const INPUT_CHANGED = 'INPUT_CHANGED'
 export const SUBMIT_POST_REQUEST = 'SUBMIT_POST_REQUEST'
 export const SUBMIT_POST_SUCCESS = 'SUBMIT_POST_SUCCESS'
 
-export function inputChanged(fields) {
+export function inputChanged({ fields, validation }) {
   return {
     type: INPUT_CHANGED,
-    fields
+    fields,
+    validation
   }
 }
 
