@@ -45,7 +45,7 @@ class PostFormContainer extends Component {
   }
 
   render() {
-    const { validation, isSubmitting } = this.props
+    const { validation, isSubmitting, fields, categories } = this.props
     const canSubmit = this.validate(validation)
     return (
       <PostForm
@@ -54,17 +54,22 @@ class PostFormContainer extends Component {
         canSubmit={canSubmit}
         isSubmitting={isSubmitting}
         validation={validation}
+        fields={fields}
+        categories={categories}
       />
     )
   }
 }
 
-function mapStateToProps({ formPost }) {
+function mapStateToProps({ formPost, categories }) {
   const { fields, isSubmitting, validation } = formPost
   return {
     fields,
     isSubmitting,
-    validation
+    validation,
+    categories: categories
+      ? Object.keys(categories).map(key => categories[key])
+      : []
   }
 }
 
@@ -79,7 +84,8 @@ PostFormContainer.propTypes = {
   submitPost: PropTypes.func.isRequired,
   fields: PropTypes.object.isRequired,
   validation: PropTypes.object.isRequired,
-  isSubmitting: PropTypes.bool.isRequired
+  isSubmitting: PropTypes.bool.isRequired,
+  categories: PropTypes.array.isRequired
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PostFormContainer)

@@ -8,7 +8,14 @@ class PostForm extends Component {
   }
 
   render() {
-    const { canSubmit, isSubmitting, validation } = this.props
+    const {
+      canSubmit,
+      isSubmitting,
+      validation,
+      fields,
+      handleInputChange,
+      categories
+    } = this.props
     return (
       <section className="section">
         <div className="field">
@@ -21,7 +28,8 @@ class PostForm extends Component {
               type="text"
               placeholder="Text input"
               name="author"
-              onChange={this.props.handleInputChange}
+              onChange={handleInputChange}
+              value={fields.author}
             />
             <span className="icon is-small is-left">
               <i className="fa fa-user" />
@@ -37,9 +45,17 @@ class PostForm extends Component {
                 ? 'is-danger'
                 : null}`}
             >
-              <select onChange={this.props.handleInputChange} name="category">
-                <option value="">Select dropdown</option>
-                <option>With options</option>
+              <select
+                efaultValue={fields.category}
+                onChange={handleInputChange}
+                name="category"
+              >
+                <option value="">Select Category</option>
+                {categories.map(category =>
+                  <option key={category.key} value={category.name}>
+                    {category.name}
+                  </option>
+                )}{' '}
               </select>
             </div>
           </div>
@@ -54,8 +70,9 @@ class PostForm extends Component {
                 : null}`}
               type="text"
               placeholder="Text input"
-              onChange={this.props.handleInputChange}
+              onChange={handleInputChange}
               name="title"
+              value={fields.title}
             />
           </div>
         </div>
@@ -72,6 +89,7 @@ class PostForm extends Component {
               placeholder="Textarea"
               onChange={this.props.handleInputChange}
               name="message"
+              value={fields.message}
             />
           </div>
         </div>
@@ -105,7 +123,9 @@ PostForm.propTypes = {
   history: PropTypes.object,
   canSubmit: PropTypes.bool.isRequired,
   isSubmitting: PropTypes.bool.isRequired,
-  validation: PropTypes.object
+  categories: PropTypes.array.isRequired,
+  validation: PropTypes.object,
+  fields: PropTypes.object
 }
 
 export default withRouter(PostForm)
