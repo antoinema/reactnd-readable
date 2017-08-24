@@ -1,8 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { Link } from 'react-router-dom'
 
 function Post(props) {
-  const { post, upVote, downVote } = props
+  const { post, upVote, downVote, editPost } = props
   function handleUpVoteClick(e) {
     e.preventDefault()
     upVote(post)
@@ -11,6 +12,7 @@ function Post(props) {
     e.preventDefault()
     downVote(post)
   }
+
   return (
     <article className="media">
       <figure className="media-left">
@@ -56,11 +58,11 @@ function Post(props) {
             </a>
           </p>
           <p className="control">
-            <a className="button">
+            <Link to={`posts/edit/${post.id}`} className="button">
               <span className="icon is-small">
                 <i className="fa fa-edit" />
               </span>
-            </a>
+            </Link>
           </p>
         </div>
       </div>
@@ -71,7 +73,8 @@ function Post(props) {
 Post.propTypes = {
   post: PropTypes.object,
   upVote: PropTypes.func.isRequired,
-  downVote: PropTypes.func.isRequired
+  downVote: PropTypes.func.isRequired,
+  editPost: PropTypes.func.isRequired
 }
 
 export default Post

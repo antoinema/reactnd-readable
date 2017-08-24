@@ -52,7 +52,7 @@ class App extends Component {
               </section>
             </div>}
         />
-        <Route path="/posts/create" component={PostFormContainer} />
+        <Route path="/posts/:type/:id" component={PostFormContainer} />
       </div>
     )
   }

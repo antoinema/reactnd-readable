@@ -1,11 +1,20 @@
 import React, { Component } from 'react'
 import PostForm from '../components/PostForm'
 import PropTypes from 'prop-types'
-import { inputChanged, submitPost } from '../actions/postForm'
+import {
+  inputChanged,
+  submitPost,
+  newPost,
+  editPost
+} from '../actions/postForm'
 import { v1 as uuidv1 } from 'uuid'
 import { connect } from 'react-redux'
 
 class PostFormContainer extends Component {
+  componentDidMount() {
+    const { editPost, newPost, match } = this.props
+    match.params.type === 'create' ? newPost() : editPost(match.params.id)
+  }
   handleInputChange = event => {
     const target = event.target
     const value = target.type === 'checkbox' ? target.checked : target.value
@@ -45,7 +54,13 @@ class PostFormContainer extends Component {
   }
 
   render() {
-    const { validation, isSubmitting, fields, categories } = this.props
+    const {
+      validation,
+      isSubmitting,
+      fields,
+      categories,
+      submitted
+    } = this.props
     const canSubmit = this.validate(validation)
     return (
       <PostForm
@@ -56,16 +71,18 @@ class PostFormContainer extends Component {
         validation={validation}
         fields={fields}
         categories={categories}
+        shouldGoHome={submitted}
       />
     )
   }
 }
 
 function mapStateToProps({ formPost, categories }) {
-  const { fields, isSubmitting, validation } = formPost
+  const { fields, isSubmitting, validation, submitted } = formPost
   return {
     fields,
     isSubmitting,
+    submitted,
     validation,
     categories: categories
       ? Object.keys(categories).map(key => categories[key])
@@ -76,16 +93,23 @@ function mapStateToProps({ formPost, categories }) {
 function mapDispatchToProps(dispatch) {
   return {
     inputChanged: data => dispatch(inputChanged(data)),
-    submitPost: data => dispatch(submitPost(data))
+    submitPost: data => dispatch(submitPost(data)),
+    newPost: () => dispatch(newPost()),
+    editPost: data => dispatch(editPost(data))
   }
 }
 PostFormContainer.propTypes = {
   inputChanged: PropTypes.func.isRequired,
   submitPost: PropTypes.func.isRequired,
   fields: PropTypes.object.isRequired,
+  post: PropTypes.object,
   validation: PropTypes.object.isRequired,
   isSubmitting: PropTypes.bool.isRequired,
-  categories: PropTypes.array.isRequired
+  categories: PropTypes.array.isRequired,
+  newPost: PropTypes.func.isRequired,
+  editPost: PropTypes.func.isRequired,
+  submitted: PropTypes.bool.isRequired,
+  match: PropTypes.object.isRequired
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PostFormContainer)

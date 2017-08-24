@@ -14,7 +14,10 @@ import { RECEIVE_CATEGORIES } from '../actions/categories'
 import {
   INPUT_CHANGED,
   SUBMIT_POST_REQUEST,
-  SUBMIT_POST_SUCCESS
+  SUBMIT_POST_SUCCESS,
+  NEW_POST,
+  CANCEL_POST,
+  EDIT_POST
 } from '../actions/postForm'
 
 // const initialState = {
@@ -182,10 +185,11 @@ function categories(state = {}, action) {
 }
 
 const initialFormState = {
-  fields: {},
+  fields: { author: '', title: '', message: '', category: '' },
   validation: {},
   canSubmit: false,
-  isSubmitting: false
+  isSubmitting: false,
+  submitted: false
 }
 
 function formPost(state = initialFormState, action) {
@@ -201,17 +205,27 @@ function formPost(state = initialFormState, action) {
           ...state['validation'],
           ...action.validation
         },
-        canSubmit: action.canSubmit
+        canSubmit: action.canSubmit,
+        submitted: false
       }
     case SUBMIT_POST_REQUEST:
       return {
         ...state,
         isSubmitting: true
       }
+    case NEW_POST:
+      return initialFormState
+    case EDIT_POST:
+      return {
+        ...initialFormState,
+        fields: action.post
+      }
     case SUBMIT_POST_SUCCESS:
+    case CANCEL_POST:
       return {
         ...state,
-        isSubmitting: false
+        isSubmitting: false,
+        submitted: true
       }
     default:
       return state
