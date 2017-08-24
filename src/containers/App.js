@@ -2,8 +2,7 @@ import React, { Component } from 'react'
 import 'bulma/css/bulma.css'
 import 'font-awesome/css/font-awesome.min.css'
 import PropTypes from 'prop-types'
-import List from '../components/List'
-import { fetchPosts } from '../actions/posts'
+import ListContainer from './ListContainer'
 import { fetchCategories } from '../actions/categories'
 import { connect } from 'react-redux'
 import Categories from '../components/Categories'
@@ -13,8 +12,7 @@ import { Route, Link, withRouter } from 'react-router-dom'
 
 class App extends Component {
   componentDidMount() {
-    const { fetchPosts, fetchCategories } = this.props
-    fetchPosts()
+    const { fetchCategories } = this.props
     fetchCategories()
   }
   render() {
@@ -45,11 +43,7 @@ class App extends Component {
                   </nav>
                 </div>
               </section>
-              <section className="section">
-                {this.props.isFetching
-                  ? 'Loading'
-                  : <List posts={this.props.posts} />}
-              </section>
+              <ListContainer />
             </div>}
         />
         <Route path="/posts/:type/:id" component={PostFormContainer} />
@@ -58,11 +52,8 @@ class App extends Component {
   }
 }
 
-function mapStateToProps({ posts, categories }) {
-  const { isFetching, items } = posts
+function mapStateToProps({ categories }) {
   return {
-    isFetching: isFetching,
-    posts: items ? Object.keys(items).map(key => items[key]) : [],
     categories: categories
       ? Object.keys(categories).map(key => categories[key])
       : []
@@ -71,7 +62,6 @@ function mapStateToProps({ posts, categories }) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    fetchPosts: () => dispatch(fetchPosts()),
     fetchCategories: () => dispatch(fetchCategories())
   }
 }
@@ -79,8 +69,6 @@ function mapDispatchToProps(dispatch) {
 App.propTypes = {
   posts: PropTypes.array.isRequired,
   categories: PropTypes.array.isRequired,
-  isFetching: PropTypes.bool.isRequired,
-  fetchPosts: PropTypes.func.isRequired,
   fetchCategories: PropTypes.func.isRequired
 }
 
