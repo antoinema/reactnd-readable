@@ -16,7 +16,7 @@ import {
   SUBMIT_POST_REQUEST,
   SUBMIT_POST_SUCCESS,
   NEW_POST,
-  CANCEL_POST,
+  EDIT_POST_REQUEST,
   EDIT_POST
 } from '../actions/postForm'
 
@@ -185,11 +185,17 @@ function categories(state = {}, action) {
 }
 
 const initialFormState = {
-  fields: { author: '', title: '', message: '', category: '' },
+  fields: { author: '', title: '', body: '', category: '' },
   validation: {},
-  canSubmit: false,
   isSubmitting: false,
-  submitted: false
+  isFetching: false
+}
+
+const initialFormEditState = {
+  fields: { author: '', title: '', body: '', category: '' },
+  validation: { author: true, title: true, body: true, category: true },
+  isSubmitting: false,
+  isFetching: false
 }
 
 function formPost(state = initialFormState, action) {
@@ -205,8 +211,7 @@ function formPost(state = initialFormState, action) {
           ...state['validation'],
           ...action.validation
         },
-        canSubmit: action.canSubmit,
-        submitted: false
+        canSubmit: action.canSubmit
       }
     case SUBMIT_POST_REQUEST:
       return {
@@ -215,13 +220,21 @@ function formPost(state = initialFormState, action) {
       }
     case NEW_POST:
       return initialFormState
+    case EDIT_POST_REQUEST:
+      return {
+        ...state,
+        isFetching: true
+      }
     case EDIT_POST:
       return {
-        ...initialFormState,
-        fields: action.post
+        ...initialFormEditState,
+        fields: {
+          ...state['fields'],
+          ...action.post
+        },
+        isFetching: false
       }
     case SUBMIT_POST_SUCCESS:
-    case CANCEL_POST:
       return {
         ...state,
         isSubmitting: false,

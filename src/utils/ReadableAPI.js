@@ -30,9 +30,12 @@ export const getCategories = () =>
     res.json().then(res => res.categories)
   )
 
-export const submitPost = ({ post }) =>
-  fetch(`${api}/posts/`, {
+export const submitPost = ({ post, edit }) => {
+  const method = edit ? 'PUT' : 'POST'
+  const id = edit ? post.id : null
+  return fetch(`${api}/posts/${id}`, {
     headers,
-    method: 'POST',
+    method: method,
     body: JSON.stringify(post)
   }).then(response => response.json())
+}

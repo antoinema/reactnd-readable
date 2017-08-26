@@ -1,4 +1,5 @@
 import * as ReadableAPI from '../utils/ReadableAPI'
+import { v1 as uuidv1 } from 'uuid'
 
 export const INPUT_CHANGED = 'INPUT_CHANGED'
 export const SUBMIT_POST_REQUEST = 'SUBMIT_POST_REQUEST'
@@ -6,6 +7,7 @@ export const SUBMIT_POST_SUCCESS = 'SUBMIT_POST_SUCCESS'
 export const NEW_POST = 'NEW_POST'
 export const CANCEL_POST = 'CANCEL_POST'
 export const EDIT_POST = 'EDIT_POST'
+export const EDIT_POST_REQUEST = 'EDIT_POST_REQUEST'
 
 export function inputChanged({ fields, validation }) {
   return {
@@ -40,7 +42,13 @@ function newPostRequest() {
   }
 }
 
-function editPostRequest(post) {
+function editPostRequest() {
+  return {
+    type: EDIT_POST_REQUEST
+  }
+}
+
+function editPostSuccess(post) {
   return {
     type: EDIT_POST,
     post
@@ -49,10 +57,21 @@ function editPostRequest(post) {
 
 export function submitPost(fields) {
   return function(dispatch) {
-    dispatch(submitPostRequest(fields))
-    return ReadableAPI.submitPost({ post: fields }).then(
-      dispatch(submitPostSuccess(fields))
-    )
+    const post =
+      fields.id === undefined
+        ? {
+          post: {
+            ...fields,
+            id: uuidv1(),
+            timestamp: Date.now(),
+            voteScore: 1,
+            deleted: false
+          },
+          edit: false
+        } // new post
+        : { post: fields, edit: true } // edit post
+    dispatch(submitPostRequest(post))
+    return ReadableAPI.submitPost(post).then(dispatch(submitPostSuccess(post)))
   }
 }
 
@@ -65,12 +84,13 @@ export function newPost() {
 
 export function editPost(postID) {
   return (dispatch, getState) => {
+    dispatch(editPostRequest())
     const post = getState().posts.items[postID]
     if (post) {
-      return dispatch(editPostRequest(post))
+      return dispatch(editPostSuccess(post))
     } else {
       return ReadableAPI.getPost(postID).then(data =>
-        dispatch(editPostRequest(data))
+        dispatch(editPostSuccess(data))
       )
     }
   }

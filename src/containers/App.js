@@ -46,7 +46,7 @@ class App extends Component {
               <ListContainer />
             </div>}
         />
-        <Route path="/posts/:type/:id" component={PostFormContainer} />
+        <Route path="/posts/:type/:id?" component={PostFormContainer} />
       </div>
     )
   }
@@ -67,7 +67,6 @@ function mapDispatchToProps(dispatch) {
 }
 
 App.propTypes = {
-  posts: PropTypes.array.isRequired,
   categories: PropTypes.array.isRequired,
   fetchCategories: PropTypes.func.isRequired
 }

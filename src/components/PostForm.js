@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { withRouter, Redirect } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 
 class PostForm extends Component {
   cancel = () => {
@@ -14,8 +14,7 @@ class PostForm extends Component {
       fields,
       handleInputChange,
       categories,
-      handleSubmit,
-      shouldGoHome
+      handleSubmit
     } = this.props
 
     return (
@@ -48,13 +47,13 @@ class PostForm extends Component {
                 : null}`}
             >
               <select
-                defaultValue={fields.category}
+                value={fields.category}
                 onChange={handleInputChange}
                 name="category"
               >
                 <option value="">Select Category</option>
                 {categories.map(category =>
-                  <option key={category.name} value={category.name}>
+                  <option key={category.path} value={category.name}>
                     {category.name}
                   </option>
                 )}{' '}
@@ -82,7 +81,7 @@ class PostForm extends Component {
         <div className="field">
           <label className="label">Message</label>
           <div
-            className={`control ${validation.message === false
+            className={`control ${validation.body === false
               ? 'is-danger'
               : null}`}
           >
@@ -90,7 +89,7 @@ class PostForm extends Component {
               className="textarea"
               placeholder="Textarea"
               onChange={this.props.handleInputChange}
-              name="message"
+              name="body"
               value={fields.body}
             />
           </div>
@@ -114,7 +113,6 @@ class PostForm extends Component {
             </button>
           </div>
         </div>
-        {shouldGoHome && <Redirect to={'/'} />}
       </section>
     )
   }
@@ -128,8 +126,7 @@ PostForm.propTypes = {
   isSubmitting: PropTypes.bool.isRequired,
   categories: PropTypes.array.isRequired,
   validation: PropTypes.object,
-  fields: PropTypes.object,
-  shouldGoHome: PropTypes.bool
+  fields: PropTypes.object
 }
 
 export default withRouter(PostForm)

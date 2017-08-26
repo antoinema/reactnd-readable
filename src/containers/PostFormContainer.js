@@ -1,14 +1,15 @@
 import React, { Component } from 'react'
 import PostForm from '../components/PostForm'
 import PropTypes from 'prop-types'
+import Loading from '../components/Loading'
 import {
   inputChanged,
   submitPost,
   newPost,
   editPost
 } from '../actions/postForm'
-import { v1 as uuidv1 } from 'uuid'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
 
 class PostFormContainer extends Component {
   componentDidMount() {
@@ -27,17 +28,7 @@ class PostFormContainer extends Component {
 
   handleSubmit = () => {
     const { fields, submitPost } = this.props
-    const post =
-      fields.id === undefined
-        ? {
-          ...fields,
-          id: uuidv1(),
-          timestamp: Date.now(),
-          voteScore: 1,
-          deleted: false
-        } // new post
-        : { ...fields } // edit post
-    submitPost(post)
+    submitPost(fields).then(() => this.props.history.push('/'))
   }
 
   validate = validation => {
@@ -59,9 +50,11 @@ class PostFormContainer extends Component {
       isSubmitting,
       fields,
       categories,
-      submitted
+      isFetching
     } = this.props
     const canSubmit = this.validate(validation)
+    if (isFetching) return <Loading />
+
     return (
       <PostForm
         handleInputChange={this.handleInputChange}
@@ -71,19 +64,19 @@ class PostFormContainer extends Component {
         validation={validation}
         fields={fields}
         categories={categories}
-        shouldGoHome={submitted}
       />
     )
   }
 }
 
 function mapStateToProps({ formPost, categories }) {
-  const { fields, isSubmitting, validation, submitted } = formPost
+  const { fields, isSubmitting, validation, submitted, isFetching } = formPost
   return {
     fields,
     isSubmitting,
     submitted,
     validation,
+    isFetching,
     categories: categories
       ? Object.keys(categories).map(key => categories[key])
       : []
@@ -108,8 +101,11 @@ PostFormContainer.propTypes = {
   categories: PropTypes.array.isRequired,
   newPost: PropTypes.func.isRequired,
   editPost: PropTypes.func.isRequired,
-  submitted: PropTypes.bool.isRequired,
-  match: PropTypes.object.isRequired
+  isFetching: PropTypes.bool.isRequired,
+  match: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(PostFormContainer)
+export default withRouter(
+  withRouter(connect(mapStateToProps, mapDispatchToProps)(PostFormContainer))
+)
