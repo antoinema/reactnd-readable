@@ -1,9 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
+import moment from 'moment'
 
 function Post(props) {
-  const { post, upVote, downVote, editPost } = props
+  const { post, upVote, downVote } = props
   function handleUpVoteClick(e) {
     e.preventDefault()
     upVote(post)
@@ -11,6 +12,10 @@ function Post(props) {
   function handleDownVoteClick(e) {
     e.preventDefault()
     downVote(post)
+  }
+
+  function formatTimeStamp(ts) {
+    return moment(ts).format('lll')
   }
 
   return (
@@ -42,7 +47,7 @@ function Post(props) {
         <div className="content">
           <p>
             <strong>{post.title}</strong> <small>{post.author}</small>{' '}
-            <small>{post.timestamp}</small>
+            <small>{formatTimeStamp(post.timestamp)}</small>
             <br />
             {post.body}
           </p>
@@ -73,8 +78,7 @@ function Post(props) {
 Post.propTypes = {
   post: PropTypes.object,
   upVote: PropTypes.func.isRequired,
-  downVote: PropTypes.func.isRequired,
-  editPost: PropTypes.func.isRequired
+  downVote: PropTypes.func.isRequired
 }
 
 export default Post
