@@ -82,4 +82,4 @@ Post.propTypes = {
   downVote: PropTypes.func.isRequired
 }
 
-export default withVotes(Post, 'POSTENDPOITN')
+export default withVotes(Post, 'posts')

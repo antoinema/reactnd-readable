@@ -4,7 +4,6 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import List from '../components/List'
 import Post from '../components/Post'
-import PostContainer from '../containers/PostContainer'
 import Categories from '../components/Categories'
 import { Link } from 'react-router-dom'
 
@@ -61,11 +60,11 @@ PostsPage.propTypes = {
   fetchCategories: PropTypes.func.isRequired
 }
 
-function mapStateToProps({ posts, categories }) {
-  const { isFetching, items } = posts
+function mapStateToProps({ items, categories }) {
+  const { isFetching, posts } = items
   return {
     isFetching: isFetching,
-    posts: items ? Object.keys(items).map(key => items[key]) : [],
+    posts: posts ? Object.keys(posts).map(key => posts[key]) : [],
     categories: categories
       ? Object.keys(categories).map(key => categories[key])
       : []

@@ -11,8 +11,7 @@ function withVotes(Item, endPoint) {
       item: PropTypes.object,
       upVote: PropTypes.func.isRequired,
       downVote: PropTypes.func.isRequired,
-      editItem: PropTypes.func.isRequired,
-      renderItem: PropTypes.func.isRequired
+      editItem: PropTypes.func.isRequired
     }
 
     onUpVote = data => {
@@ -26,9 +25,9 @@ function withVotes(Item, endPoint) {
     render() {
       return (
         <Item
-          upVote={this.onUpVote}
-          downdVote={this.onDowndVote}
           {...this.props}
+          upVote={this.onUpVote}
+          downVote={this.onDowndVote}
         />
       )
     }
@@ -36,9 +35,8 @@ function withVotes(Item, endPoint) {
 
   function mapDispatchToProps(dispatch) {
     return {
-      upVote: data => dispatch(upVote(data)),
-      downVote: data => dispatch(downVote(data))
-      //editPost: data => dispatch(editPost(data))
+      upVote: (data, endPoint) => dispatch(upVote(data, endPoint)),
+      downVote: (data, endPoint) => dispatch(downVote(data, endPoint))
     }
   }
   return connect(null, mapDispatchToProps)(ItemContainer)

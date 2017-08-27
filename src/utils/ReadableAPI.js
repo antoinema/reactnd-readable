@@ -16,8 +16,8 @@ export const getPost = postId =>
 export const getAllPosts = () =>
   fetch(`${api}/posts`, { headers }).then(res => res.json())
 
-export const votePost = ({ post, apiValue }) =>
-  fetch(`${api}/posts/${post.id}`, {
+export const voteItem = ({ item, apiValue, endPoint }) =>
+  fetch(`${api}/${endPoint}/${item.id}`, {
     headers,
     method: 'POST',
     body: JSON.stringify({

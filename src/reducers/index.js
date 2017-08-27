@@ -93,10 +93,11 @@ const initialState = {
   }
 }
 
-function posts(
+function items(
   state = {
     isFetching: false,
-    items: []
+    posts: [],
+    comments: []
   },
   action
 ) {
@@ -110,7 +111,7 @@ function posts(
       return {
         ...state,
         isFetching: false,
-        items: action.posts
+        posts: action.posts
       }
     case UPVOTE_REQUEST:
     case DOWNVOTE_REQUEST:
@@ -118,22 +119,22 @@ function posts(
     case UPVOTE_SUCCESS:
       return {
         ...state,
-        items: {
-          ...state['items'],
-          [action.post.id]: {
-            ...action.post,
-            voteScore: action.post.voteScore + 1
+        [action.endPoint]: {
+          ...state[action.endPoint],
+          [action.item.id]: {
+            ...action.item,
+            voteScore: action.item.voteScore + 1
           }
         }
       }
     case DOWNVOTE_SUCCESS:
       return {
         ...state,
-        items: {
-          ...state['items'],
-          [action.post.id]: {
-            ...action.post,
-            voteScore: action.post.voteScore - 1
+        [action.endPoint]: {
+          ...state[action.endPoint],
+          [action.item.id]: {
+            ...action.item,
+            voteScore: action.item.voteScore - 1
           }
         }
       }
@@ -152,23 +153,13 @@ function posts(
   }
 }
 
-function allPosts(state = {}, action) {
-  switch (action.type) {
-    case RECEIVE_POSTS:
-    case REQUEST_POSTS:
-      return posts(null, action)
-    default:
-      return state
-  }
-}
-
 function postsByCategory(state = {}, action) {
   switch (action.type) {
     case RECEIVE_POSTS:
     case REQUEST_POSTS:
       return {
         ...state,
-        [action.category]: posts(state[action.category], action)
+        [action.category]: items(state[action.category], action)
       }
     default:
       return state
@@ -246,7 +237,7 @@ function formPost(state = initialFormState, action) {
 }
 
 const rootReducer = combineReducers({
-  posts,
+  items,
   postsByCategory,
   categories,
   formPost
