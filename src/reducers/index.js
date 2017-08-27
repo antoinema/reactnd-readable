@@ -195,7 +195,7 @@ const initialFormEditState = {
   fields: { author: '', title: '', body: '', category: '' },
   validation: { author: true, title: true, body: true, category: true },
   isSubmitting: false,
-  isFetching: false
+  isFetching: true
 }
 
 function formPost(state = initialFormState, action) {

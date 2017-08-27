@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import moment from 'moment'
+import withVotes from '../helpers/withVotes'
 
 function Post(props) {
   const { post, upVote, downVote } = props
@@ -63,7 +64,7 @@ function Post(props) {
             </a>
           </p>
           <p className="control">
-            <Link to={`posts/edit/${post.id}`} className="button">
+            <Link to={`posts/${post.id}/edit`} className="button">
               <span className="icon is-small">
                 <i className="fa fa-edit" />
               </span>
@@ -81,4 +82,4 @@ Post.propTypes = {
   downVote: PropTypes.func.isRequired
 }
 
-export default Post
+export default withVotes(Post, 'POSTENDPOITN')

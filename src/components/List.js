@@ -1,17 +1,32 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import PostContainer from '../containers/PostContainer'
+import Loading from './Loading'
 
-function List({ posts }) {
+function List(props) {
+  const { isFetching, items, renderItem } = props
+
+  const isEmpty = items.length === 0
+  if (isEmpty && isFetching) {
+    return <Loading />
+  }
+
   return (
-    <div className="container">
-      {posts.map(post => <PostContainer key={post.id} post={post} />)}
-    </div>
+    <section className="section">
+      <div className="container">
+        {items.map(renderItem)}
+      </div>
+    </section>
   )
 }
 
 List.propTypes = {
-  posts: PropTypes.array.isRequired
+  renderItem: PropTypes.func.isRequired,
+  items: PropTypes.array.isRequired,
+  isFetching: PropTypes.bool.isRequired
+}
+
+List.defaultProps = {
+  isFetching: true
 }
 
 export default List

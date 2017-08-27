@@ -6,13 +6,17 @@ const Loading = props => {
     <section>
       <div className="container">
         <p className="has-text-centered has-text-grey-light">
-          {props.loadText ? props.loadText : 'Loading'}
+          {props.children}
         </p>
       </div>
     </section>
   )
 }
 Loading.propTypes = {
-  loadText: PropTypes.string.isRequired
+  children: PropTypes.object
 }
+Loading.defaultPropTypes = {
+  children: 'Loading'
+}
+
 export default Loading
