@@ -29,5 +29,6 @@ export default withInitAndSubmit(
     form: 'comments',
     enableReinitialize: true
   })(CommentForm),
-  'comments'
+  'comments',
+  'posts'
 )

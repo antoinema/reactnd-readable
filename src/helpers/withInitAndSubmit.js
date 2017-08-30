@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 import { withRouter } from 'react-router-dom'
 import Loading from '../components/Loading'
 
-function withInitAndSubmit(ItemForm, endPoint) {
+function withInitAndSubmit(ItemForm, endPoint, parentEndPoint) {
   class FormContainer extends Component {
     static propTypes = {
       initialValues: PropTypes.object,
@@ -24,14 +24,13 @@ function withInitAndSubmit(ItemForm, endPoint) {
 
     handleSubmit = fields => {
       this.props
-        .submitItem(fields, endPoint)
+        .submitItem(fields, endPoint, parentEndPoint)
         .then(() => this.props.history.push('/'))
     }
     render() {
       const { isFetching } = this.props
       if (isFetching) return <Loading />
-
-      return <ItemForm onSumbit={this.handleSubmit} {...this.props} />
+      return <ItemForm onSubmit={this.handleSubmit} {...this.props} />
     }
   }
 
@@ -47,8 +46,10 @@ function withInitAndSubmit(ItemForm, endPoint) {
 
   function mapDispatchToProps(dispatch) {
     return {
-      submitItem: (item, endPoint) => dispatch(submitItem(item, endPoint)),
-      loadItem: (item, endPoint) => dispatch(loadItem(item, endPoint))
+      submitItem: (item, endPoint) =>
+        dispatch(submitItem(item, endPoint, parentEndPoint)),
+      loadItem: (item, endPoint) =>
+        dispatch(loadItem(item, endPoint, parentEndPoint))
     }
   }
 

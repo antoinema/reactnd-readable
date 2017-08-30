@@ -4,9 +4,9 @@ import PropTypes from 'prop-types'
 const Loading = props => {
   return (
     <section>
-      <div className="container">
+      <div className="section">
         <p className="has-text-centered has-text-grey-light">
-          {props.children}
+          {props.children || 'Loading'}
         </p>
       </div>
     </section>
@@ -14,9 +14,6 @@ const Loading = props => {
 }
 Loading.propTypes = {
   children: PropTypes.object
-}
-Loading.defaultPropTypes = {
-  children: 'Loading'
 }
 
 export default Loading

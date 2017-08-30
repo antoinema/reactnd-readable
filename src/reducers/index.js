@@ -107,6 +107,27 @@ function items(
         isFetching: false,
         posts: action.posts
       }
+
+    case RECEIVE_ITEMS:
+      return {
+        ...state,
+        [action.endPoint]: {
+          // posts or comment or categories
+          ...state[action.endPoint],
+          byId: action.items
+        },
+        [action.parentEndPoint]: {
+          // posts or categories
+          ...state[action.parentEndPoint],
+          byId: {
+            ...state[action.parentEndPoint].byId,
+            [action.item.parentId]: {
+              ...state[action.parentEndPoint].byId,
+              [action.endPoint]: action.items
+            }
+          }
+        }
+      }
     case REQUEST_ITEM:
       return {
         ...state,
@@ -119,10 +140,25 @@ function items(
       return {
         ...state,
         [action.endPoint]: {
+          // posts or comment or categories
           ...state[action.endPoint],
           byId: {
             ...state[action.endPoint].byId,
             [action.item.id]: action.item
+          },
+          isFetching: false
+        },
+        [action.parentEndPoint]: {
+          // posts or categories
+          ...state[action.parentEndPoint],
+          byId: {
+            ...state[action.parentEndPoint].byId,
+            [action.item.parentId]: {
+              ...state[action.parentEndPoint].byId,
+              [action.endPoint]: action.item.id.concat(
+                state[action.parentEndPoint].byId[action.endPoint]
+              )
+            }
           },
           isFetching: false
         }

@@ -42,17 +42,18 @@ function requestItem(endPoint) {
   }
 }
 
-function receiveItem(item, endPoint) {
+function receiveItem(item, endPoint, parentEndPoint) {
   return {
     type: RECEIVE_ITEM,
     item,
     endPoint,
+    parentEndPoint,
     receivedAt: Date.now()
   }
 }
 
 // Fetches a single item (post, comment) from Readable API unless it is cached.
-export function loadItem(itemId, endPoint) {
+export function loadItem(itemId, endPoint, parentEndPoint) {
   return (dispatch, getState) => {
     const item = getState().items[endPoint][itemId]
     if (item) {
@@ -61,7 +62,7 @@ export function loadItem(itemId, endPoint) {
     dispatch(requestItem(endPoint))
     return ReadableAPI.getItem(itemId, endPoint).then(data => {
       if (data.error) return dispatch(apiFailure(LOAD_ITEM_FAILURE, data.error))
-      return dispatch(receiveItem(data, endPoint))
+      return dispatch(receiveItem(data, endPoint, parentEndPoint))
     })
   }
 }
