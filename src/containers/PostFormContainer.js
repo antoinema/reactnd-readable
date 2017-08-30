@@ -14,6 +14,8 @@ import { withRouter } from 'react-router-dom'
 class PostFormContainer extends Component {
   componentDidMount() {
     const { editPost, newPost, match } = this.props
+    console.log(this.props)
+
     match.params.id === 'new' ? newPost() : editPost(match.params.id)
   }
   handleInputChange = event => {
@@ -107,5 +109,5 @@ PostFormContainer.propTypes = {
 }
 
 export default withRouter(
-  withRouter(connect(mapStateToProps, mapDispatchToProps)(PostFormContainer))
+  connect(mapStateToProps, mapDispatchToProps)(PostFormContainer)
 )

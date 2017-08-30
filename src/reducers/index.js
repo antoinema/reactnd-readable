@@ -1,12 +1,17 @@
 import { combineReducers } from 'redux'
-
-import { REQUEST_POSTS, RECEIVE_POSTS } from '../actions/posts'
+import { reducer as formReducer } from 'redux-form'
 
 import {
   UPVOTE_REQUEST,
   UPVOTE_SUCCESS,
   DOWNVOTE_REQUEST,
-  DOWNVOTE_SUCCESS
+  DOWNVOTE_SUCCESS,
+  REQUEST_POSTS,
+  RECEIVE_POSTS,
+  REQUEST_ITEM,
+  RECEIVE_ITEM,
+  LOAD_ITEM_FAILURE,
+  RESET_ERROR_MESSAGE
 } from '../actions/posts'
 
 import { RECEIVE_CATEGORIES } from '../actions/categories'
@@ -22,7 +27,7 @@ import {
 
 // const initialState = {
 //   currentCategory: 'frontend',
-//   entities: {
+//   items: {
 //     posts: {
 //       42: {
 //         id: 42,
@@ -77,27 +82,16 @@ import {
 //   return state
 // }
 
-const initialState = {
-  posts: {
-    42: {
-      id: 42,
-      title: 'Confusion about Flux and Relay',
-      comments: [2]
-    },
-    100: {
-      id: 100,
-      title:
-        'Creating a Simple Application Using React JS and Flux Architecture',
-      comments: null
-    }
-  }
-}
-
 function items(
   state = {
-    isFetching: false,
-    posts: [],
-    comments: []
+    posts: {
+      byId: {},
+      isFetching: true
+    },
+    comments: {
+      byId: {},
+      isFetching: true
+    }
   },
   action
 ) {
@@ -113,6 +107,35 @@ function items(
         isFetching: false,
         posts: action.posts
       }
+    case REQUEST_ITEM:
+      return {
+        ...state,
+        [action.endPoint]: {
+          ...state[action.endPoint],
+          isFetching: true
+        }
+      }
+    case RECEIVE_ITEM:
+      return {
+        ...state,
+        [action.endPoint]: {
+          ...state[action.endPoint],
+          byId: {
+            ...state[action.endPoint].byId,
+            [action.item.id]: action.item
+          },
+          isFetching: false
+        }
+      }
+    case LOAD_ITEM_FAILURE:
+      return {
+        ...state,
+        [action.endPoint]: {
+          ...state[action.endPoint],
+          isFetching: false
+        }
+      }
+
     case UPVOTE_REQUEST:
     case DOWNVOTE_REQUEST:
       return state
@@ -121,9 +144,12 @@ function items(
         ...state,
         [action.endPoint]: {
           ...state[action.endPoint],
-          [action.item.id]: {
-            ...action.item,
-            voteScore: action.item.voteScore + 1
+          byId: {
+            ...state[action.endPoint].byId,
+            [action.item.id]: {
+              ...action.item,
+              voteScore: action.item.voteScore + 1
+            }
           }
         }
       }
@@ -132,9 +158,12 @@ function items(
         ...state,
         [action.endPoint]: {
           ...state[action.endPoint],
-          [action.item.id]: {
-            ...action.item,
-            voteScore: action.item.voteScore - 1
+          byId: {
+            ...state[action.endPoint].byId,
+            [action.item.id]: {
+              ...action.item,
+              voteScore: action.item.voteScore - 1
+            }
           }
         }
       }
@@ -236,11 +265,24 @@ function formPost(state = initialFormState, action) {
   }
 }
 
+function errorMessage(state = null, action) {
+  const { type, error } = action
+
+  if (type === RESET_ERROR_MESSAGE) {
+    return null
+  } else if (error) {
+    return action.error
+  }
+  return state
+}
+
 const rootReducer = combineReducers({
   items,
   postsByCategory,
   categories,
-  formPost
+  formPost,
+  errorMessage,
+  form: formReducer
 })
 
 export default rootReducer

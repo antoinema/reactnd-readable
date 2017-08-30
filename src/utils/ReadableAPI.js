@@ -10,20 +10,43 @@ const headers = {
   Authorization: token
 }
 
+function handleErrors(response) {
+  if (response.ok) {
+    return response
+  }
+  throw Error(response.statusText || 'Something bad happened')
+}
+
 export const getPost = postId =>
   fetch(`${api}/posts/${postId}`, { headers }).then(res => res.json())
+
+export const getItem = (itemId, endPoint) => {
+  console.log(`call to API: ${endPoint}:${itemId}`)
+
+  return fetch(`${api}/${endPoint}/${itemId}`, { headers })
+    .then(handleErrors)
+    .then(response => response.json())
+    .catch(error => {
+      return { error: error.message }
+    })
+}
 
 export const getAllPosts = () =>
   fetch(`${api}/posts`, { headers }).then(res => res.json())
 
-export const voteItem = ({ item, apiValue, endPoint }) =>
+export const voteItem = (item, apiValue, endPoint) =>
   fetch(`${api}/${endPoint}/${item.id}`, {
     headers,
     method: 'POST',
     body: JSON.stringify({
       option: apiValue
     })
-  }).then(response => response.json())
+  })
+    .then(handleErrors)
+    .then(response => response.json())
+    .catch(error => {
+      return { error: error.message }
+    })
 
 export const getCategories = () =>
   fetch(`${api}/categories`, { headers }).then(res =>
@@ -38,4 +61,31 @@ export const submitPost = ({ post, edit }) => {
     method: method,
     body: JSON.stringify(post)
   }).then(response => response.json())
+}
+
+export const submitNewItem = (item, endPoint) => {
+  return fetch(`${api}/${endPoint}/`, {
+    headers,
+    method: 'POST',
+    body: JSON.stringify(item)
+  })
+    .then(handleErrors)
+    .then(response => response.json())
+    .catch(error => {
+      return { error: error.message }
+    })
+}
+
+export const submitEditItem = (item, endPoint) => {
+  const id = item.id
+  return fetch(`${api}/${endPoint}/${id}`, {
+    headers,
+    method: 'PUT',
+    body: JSON.stringify(item)
+  })
+    .then(handleErrors)
+    .then(response => response.json())
+    .catch(error => {
+      return { error: error.message }
+    })
 }

@@ -1,4 +1,4 @@
-import { fetchPosts } from '../actions/posts'
+import { loadPosts } from '../actions/posts'
 import { fetchCategories } from '../actions/categories'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
@@ -11,8 +11,8 @@ import React, { Component } from 'react'
 
 class PostsPage extends Component {
   componentDidMount() {
-    const { fetchPosts, fetchCategories } = this.props
-    fetchPosts()
+    const { loadPosts, fetchCategories } = this.props
+    loadPosts()
     fetchCategories()
   }
 
@@ -55,7 +55,7 @@ class PostsPage extends Component {
 PostsPage.propTypes = {
   posts: PropTypes.array.isRequired,
   isFetching: PropTypes.bool.isRequired,
-  fetchPosts: PropTypes.func.isRequired,
+  loadPosts: PropTypes.func.isRequired,
   categories: PropTypes.array.isRequired,
   fetchCategories: PropTypes.func.isRequired
 }
@@ -73,7 +73,7 @@ function mapStateToProps({ items, categories }) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    fetchPosts: () => dispatch(fetchPosts()),
+    loadPosts: () => dispatch(loadPosts()),
     fetchCategories: () => dispatch(fetchCategories())
   }
 }

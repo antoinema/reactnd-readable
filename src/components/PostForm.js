@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { withRouter } from 'react-router-dom'
+import withInitAndSubmit from '../helpers/withInitAndSubmit'
 
 class PostForm extends Component {
   cancel = () => {
@@ -129,4 +130,4 @@ PostForm.propTypes = {
   fields: PropTypes.object
 }
 
-export default withRouter(PostForm)
+export default withRouter(withInitAndSubmit(PostForm, 'posts'))

@@ -3,15 +3,13 @@ import PropTypes from 'prop-types'
 
 import { connect } from 'react-redux'
 import { upVote, downVote } from '../actions/posts'
-import { editPost } from '../actions/postForm'
 
 function withVotes(Item, endPoint) {
   class ItemContainer extends Component {
     static propTypes = {
       item: PropTypes.object,
       upVote: PropTypes.func.isRequired,
-      downVote: PropTypes.func.isRequired,
-      editItem: PropTypes.func.isRequired
+      downVote: PropTypes.func.isRequired
     }
 
     onUpVote = data => {
@@ -27,7 +25,7 @@ function withVotes(Item, endPoint) {
         <Item
           {...this.props}
           upVote={this.onUpVote}
-          downVote={this.onDowndVote}
+          downVote={this.onDownVote}
         />
       )
     }

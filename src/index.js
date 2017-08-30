@@ -10,25 +10,20 @@ import rootReducer from './reducers'
 import { Provider } from 'react-redux'
 import { BrowserRouter } from 'react-router-dom'
 
-
 const loggerMiddleware = createLogger()
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 
 const store = createStore(
   rootReducer,
-  composeEnhancers(
-    applyMiddleware(
-      thunkMiddleware,
-      loggerMiddleware
-    )
-  )
+  composeEnhancers(applyMiddleware(thunkMiddleware, loggerMiddleware))
 )
 
-
 ReactDOM.render(
-  <Provider store={store}> 
-    <BrowserRouter><App /></BrowserRouter>
+  <Provider store={store}>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
   </Provider>,
   document.getElementById('root')
 )
