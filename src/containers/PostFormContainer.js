@@ -2,82 +2,40 @@ import React, { Component } from 'react'
 import PostForm from '../components/PostForm'
 import PropTypes from 'prop-types'
 import Loading from '../components/Loading'
-import {
-  inputChanged,
-  submitPost,
-  newPost,
-  editPost
-} from '../actions/postForm'
+import { submitPost, loadPost } from '../actions/posts'
+import { loadCategories } from '../actions/categories'
+
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 
 class PostFormContainer extends Component {
-  componentDidMount() {
-    const { editPost, newPost, match } = this.props
-    console.log(this.props)
-
-    match.params.id === 'new' ? newPost() : editPost(match.params.id)
-  }
-  handleInputChange = event => {
-    const target = event.target
-    const value = target.type === 'checkbox' ? target.checked : target.value
-    const name = target.name
-    this.props.inputChanged({
-      fields: { [name]: value },
-      validation: { [name]: value.length > 0 }
-    })
+  componentWillMount() {
+    const { match, loadPost, loadCategories } = this.props
+    const postId = this.props.postId || match.params.postId
+    postId && loadPost(postId)
+    loadCategories()
   }
 
-  handleSubmit = () => {
-    const { fields, submitPost } = this.props
-    submitPost(fields).then(() => this.props.history.push('/'))
-  }
-
-  validate = validation => {
-    const fieldsValidationArray = Object.keys(validation).map(
-      key => validation[key]
-    )
-    return (
-      fieldsValidationArray.length === 4 &&
-      fieldsValidationArray.reduce(
-        (fieldsOk, isValid) => isValid && fieldsOk,
-        true
-      )
-    )
+  handleSubmit = fields => {
+    this.props.submitPost(fields).then(() => this.props.history.push('/'))
   }
 
   render() {
-    const {
-      validation,
-      isSubmitting,
-      fields,
-      categories,
-      isFetching
-    } = this.props
-    const canSubmit = this.validate(validation)
-    if (isFetching) return <Loading />
+    const { isFetching, match } = this.props
+    const postId = this.props.postId || match.params.postId
+    if (postId && isFetching) return <Loading />
 
-    return (
-      <PostForm
-        handleInputChange={this.handleInputChange}
-        handleSubmit={this.handleSubmit}
-        canSubmit={canSubmit}
-        isSubmitting={isSubmitting}
-        validation={validation}
-        fields={fields}
-        categories={categories}
-      />
-    )
+    return <PostForm onSubmit={this.handleSubmit} {...this.props} />
   }
 }
 
-function mapStateToProps({ formPost, categories }) {
-  const { fields, isSubmitting, validation, submitted, isFetching } = formPost
+function mapStateToProps(state, ownProps) {
+  const { posts, categories, ui } = state
+  const isFetching = ui.isFetching
+  const { match } = ownProps
+  const postId = ownProps.postId || match.params.postId
   return {
-    fields,
-    isSubmitting,
-    submitted,
-    validation,
+    initialValues: posts.postsById[postId],
     isFetching,
     categories: categories
       ? Object.keys(categories).map(key => categories[key])
@@ -87,25 +45,20 @@ function mapStateToProps({ formPost, categories }) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    inputChanged: data => dispatch(inputChanged(data)),
+    loadPost: data => dispatch(loadPost(data)),
     submitPost: data => dispatch(submitPost(data)),
-    newPost: () => dispatch(newPost()),
-    editPost: data => dispatch(editPost(data))
+    loadCategories: () => dispatch(loadCategories())
   }
 }
 PostFormContainer.propTypes = {
-  inputChanged: PropTypes.func.isRequired,
   submitPost: PropTypes.func.isRequired,
-  fields: PropTypes.object.isRequired,
-  post: PropTypes.object,
-  validation: PropTypes.object.isRequired,
-  isSubmitting: PropTypes.bool.isRequired,
-  categories: PropTypes.array.isRequired,
-  newPost: PropTypes.func.isRequired,
-  editPost: PropTypes.func.isRequired,
+  loadPost: PropTypes.func.isRequired,
+  loadCategories: PropTypes.func.isRequired,
+  categories: PropTypes.array,
   isFetching: PropTypes.bool.isRequired,
-  match: PropTypes.object.isRequired,
-  history: PropTypes.object.isRequired
+  postId: PropTypes.number,
+  match: PropTypes.object,
+  history: PropTypes.object
 }
 
 export default withRouter(

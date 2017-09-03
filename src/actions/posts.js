@@ -1,171 +1,67 @@
 import * as ReadableAPI from '../utils/ReadableAPI'
 import { v1 as uuidv1 } from 'uuid'
 
-export const REQUEST_POSTS = 'REQUEST_POSTS'
-export const RECEIVE_POSTS = 'RECEIVE_POSTS'
-
-function requestPosts() {
-  return {
-    type: REQUEST_POSTS
-  }
-}
-
-function receivePosts(posts) {
-  const postsObj = posts.reduce((postsAccumulator, post) => {
-    postsAccumulator[post.id] = post
-    return postsAccumulator
-  }, {})
-  return {
-    type: RECEIVE_POSTS,
-    posts: postsObj,
-    receivedAt: Date.now()
-  }
-}
+export const LOAD_POSTS_REQUEST = 'LOAD_POSTS_REQUEST'
+export const LOAD_POSTS_SUCCESS = 'LOAD_POSTS_SUCCESS'
+export const LOAD_POSTS_FAILURE = 'LOAD_POSTS_FAILURE'
 
 export function loadPosts() {
-  return function(dispatch) {
-    dispatch(requestPosts())
-    return ReadableAPI.getAllPosts().then(posts =>
-      dispatch(receivePosts(posts))
-    )
-  }
-}
-
-export const REQUEST_ITEM = 'REQUEST_ITEM'
-export const RECEIVE_ITEM = 'RECEIVE_ITEM'
-export const LOAD_ITEM_FAILURE = 'LOAD_ITEM_FAILURE'
-
-function requestItem(endPoint) {
   return {
-    type: REQUEST_ITEM,
-    endPoint
+    // Types of actions to emit before and after
+    types: [LOAD_POSTS_REQUEST, LOAD_POSTS_SUCCESS, LOAD_POSTS_FAILURE],
+    // Check the cache (optional):
+    shouldCallAPI: state => !state.posts.allPostsById,
+    // Perform the fetching:
+    callAPI: () => ReadableAPI.getAllPosts(),
+    // Arguments to inject in begin/end actions
+    payload: {}
   }
 }
 
-function receiveItem(item, endPoint, parentEndPoint) {
+export const LOAD_POST_REQUEST = 'LOAD_POST_REQUEST'
+export const LOAD_POST_SUCCESS = 'LOAD_POST_SUCCESS'
+export const LOAD_POST_FAILURE = 'LOAD_POST_FAILURE'
+
+export function loadPost(postId) {
   return {
-    type: RECEIVE_ITEM,
-    item,
-    endPoint,
-    parentEndPoint,
-    receivedAt: Date.now()
+    types: [LOAD_POST_REQUEST, LOAD_POST_SUCCESS, LOAD_POST_FAILURE],
+    shouldCallAPI: state => !state.posts.postsById[postId],
+    callAPI: () => ReadableAPI.getPost(postId),
+    payload: {}
   }
 }
 
-// Fetches a single item (post, comment) from Readable API unless it is cached.
-export function loadItem(itemId, endPoint, parentEndPoint) {
-  return (dispatch, getState) => {
-    const item = getState().items[endPoint][itemId]
-    if (item) {
-      return null
-    }
-    dispatch(requestItem(endPoint))
-    return ReadableAPI.getItem(itemId, endPoint).then(data => {
-      if (data.error) return dispatch(apiFailure(LOAD_ITEM_FAILURE, data.error))
-      return dispatch(receiveItem(data, endPoint, parentEndPoint))
-    })
-  }
-}
+export const SUBMIT_POST_REQUEST = 'SUBMIT_POST_REQUEST'
+export const SUBMIT_POST_SUCCESS = 'SUBMIT_POST_SUCCESS'
+export const SUBMIT_POST_FAILURE = 'SUBMIT_POST_FAILURE'
 
-export const UPVOTE_REQUEST = 'UPVOTE_REQUEST'
-export const UPVOTE_SUCCESS = 'UPVOTE_SUCCESS'
-export const DOWNVOTE_REQUEST = 'DOWNVOTE_REQUEST'
-export const DOWNVOTE_SUCCESS = 'DOWNVOTE_SUCCESS'
-
-function voteRequest(item, type, endPoint) {
-  return {
-    type,
-    item,
-    endPoint
-  }
-}
-
-function voteSuccess(item, type, endPoint) {
-  return {
-    type: type === UPVOTE_REQUEST ? UPVOTE_SUCCESS : DOWNVOTE_SUCCESS,
-    item,
-    endPoint
-  }
-}
-
-function voteItem(item, type, endPoint) {
-  return function(dispatch) {
-    dispatch(voteRequest(item, type, endPoint))
-    const apiValue = type === UPVOTE_REQUEST ? 'upVote' : 'downVote'
-    return ReadableAPI.voteItem(item, apiValue, endPoint).then(() =>
-      dispatch(voteSuccess(item, type, endPoint))
-    )
-  }
-}
-
-export function downVote(item, endPoint) {
-  return voteItem({
-    item,
-    endPoint,
-    type: DOWNVOTE_REQUEST
-  })
-}
-
-export function upVote(item, endPoint) {
-  return voteItem({
-    item,
-    endPoint,
-    type: UPVOTE_REQUEST
-  })
-}
-
-export const SUBMIT_ITEM_REQUEST = 'SUBMIT_ITEM_REQUEST'
-export const SUBMIT_ITEM_SUCCESS = 'SUBMIT_ITEM_SUCCESS'
-
-function submitItemRequest(fields, endPoint) {
-  return {
-    type: SUBMIT_ITEM_REQUEST,
-    item: fields,
-    endPoint
-  }
-}
-
-function submitItemSuccess(fields, endPoint) {
-  return {
-    type: SUBMIT_ITEM_SUCCESS,
-    item: fields,
-    endPoint
-  }
-}
-
-export function submitItem(fields, endPoint) {
-  return function(dispatch) {
-    if (fields.id === undefined) {
-      const newItem = {
+export function submitPost(fields) {
+  const post =
+    fields.id === undefined
+      ? {
         ...fields,
         id: uuidv1(),
         timestamp: Date.now(),
         voteScore: 1,
         deleted: false
       }
-      dispatch(submitItemRequest(newItem, endPoint))
-      return ReadableAPI.submitEditItem(newItem, endPoint).then(
-        dispatch(submitItemSuccess(newItem, endPoint))
-      )
-    } else {
-      dispatch(submitItemRequest(fields, endPoint))
-      return ReadableAPI.submitEditItem(fields, endPoint).then(
-        dispatch(submitItemSuccess(fields, endPoint))
-      )
-    }
-  }
-}
-
-function apiFailure(type, error) {
+      : fields
+  const isNew = fields.id === undefined
   return {
-    type,
-    error
+    types: [SUBMIT_POST_REQUEST, SUBMIT_POST_SUCCESS, SUBMIT_POST_FAILURE],
+    callAPI: () => ReadableAPI.submitPost(post, isNew),
+    payload: { fields, isNew }
   }
 }
 
-export const RESET_ERROR_MESSAGE = 'RESET_ERROR_MESSAGE'
+export const VOTE_POST_REQUEST = 'VOTE_POST_REQUEST'
+export const VOTE_POST_SUCCESS = 'VOTE_POST_SUCCESS'
+export const VOTE_POST_FAILURE = 'VOTE_POST_FAILURE'
 
-// Resets the currently visible error message.
-export const resetErrorMessage = () => ({
-  type: RESET_ERROR_MESSAGE
-})
+export function votePost(post, direction) {
+  return {
+    types: [VOTE_POST_REQUEST, VOTE_POST_SUCCESS, VOTE_POST_FAILURE],
+    callAPI: () => ReadableAPI.votePost(post, direction),
+    payload: { post, direction }
+  }
+}

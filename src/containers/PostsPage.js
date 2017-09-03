@@ -1,19 +1,20 @@
 import { loadPosts } from '../actions/posts'
-import { fetchCategories } from '../actions/categories'
+import { loadCategories } from '../actions/categories'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import List from '../components/List'
 import Post from '../components/Post'
 import Categories from '../components/Categories'
 import { Link } from 'react-router-dom'
+import { getVisiblePosts } from '../reducers'
 
 import React, { Component } from 'react'
 
 class PostsPage extends Component {
-  componentDidMount() {
-    const { loadPosts, fetchCategories } = this.props
+  componentWillMount() {
+    const { loadPosts, loadCategories } = this.props
     loadPosts()
-    fetchCategories()
+    loadCategories()
   }
 
   renderPost(post) {
@@ -33,7 +34,7 @@ class PostsPage extends Component {
                   </p>
                 </div>
                 <p className="level-item">
-                  <Link to="/posts/new" className="button is-primary">
+                  <Link to="/post/new" className="button is-primary">
                     New
                   </Link>
                 </p>
@@ -57,24 +58,19 @@ PostsPage.propTypes = {
   isFetching: PropTypes.bool.isRequired,
   loadPosts: PropTypes.func.isRequired,
   categories: PropTypes.array.isRequired,
-  fetchCategories: PropTypes.func.isRequired
+  loadCategories: PropTypes.func.isRequired
 }
 
-function mapStateToProps({ items, categories }) {
-  const { isFetching, posts } = items
+function mapStateToProps(state) {
   return {
-    isFetching: isFetching,
-    posts: posts ? Object.keys(posts).map(key => posts[key]) : [],
-    categories: categories
-      ? Object.keys(categories).map(key => categories[key])
-      : []
+    posts: getVisiblePosts(state, 'all')
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     loadPosts: () => dispatch(loadPosts()),
-    fetchCategories: () => dispatch(fetchCategories())
+    loadCategories: () => dispatch(loadCategories())
   }
 }
 

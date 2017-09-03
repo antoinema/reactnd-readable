@@ -2,22 +2,20 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
 import { connect } from 'react-redux'
-import { upVote, downVote } from '../actions/posts'
 
-function withVotes(Item, endPoint) {
+function withVotes(Item, voteAction) {
   class ItemContainer extends Component {
     static propTypes = {
       item: PropTypes.object,
-      upVote: PropTypes.func.isRequired,
-      downVote: PropTypes.func.isRequired
+      vote: PropTypes.func.isRequired
     }
 
     onUpVote = data => {
-      this.props.upVote(data, endPoint)
+      this.props.vote(data, 'upVote')
     }
 
     onDownVote = data => {
-      this.props.downVote(data, endPoint)
+      this.props.vote(data, 'downVote')
     }
 
     render() {
@@ -33,11 +31,10 @@ function withVotes(Item, endPoint) {
 
   function mapDispatchToProps(dispatch) {
     return {
-      upVote: (data, endPoint) => dispatch(upVote(data, endPoint)),
-      downVote: (data, endPoint) => dispatch(downVote(data, endPoint))
+      vote: (data, direction) => dispatch(voteAction(data, direction))
     }
   }
-  return connect(null, mapDispatchToProps)(ItemContainer)
+  return connect(null, mapDispatchToProps)(ItemContainer, voteAction)
 }
 
 export default withVotes

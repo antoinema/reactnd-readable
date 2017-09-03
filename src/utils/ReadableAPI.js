@@ -10,31 +10,17 @@ const headers = {
   Authorization: token
 }
 
-function handleErrors(response) {
-  if (response.ok) {
-    return response
-  }
-  throw Error(response.statusText || 'Something bad happened')
-}
+export const getPost = postId => fetch(`${api}/posts/${postId}`, { headers })
+export const getAllPosts = () => fetch(`${api}/posts`, { headers })
 
-export const getPost = postId =>
-  fetch(`${api}/posts/${postId}`, { headers }).then(res => res.json())
+export const getComment = commentId =>
+  fetch(`${api}/comments/${commentId}`, { headers })
 
-export const getItem = (itemId, endPoint) => {
-  console.log(`call to API: ${endPoint}:${itemId}`)
+export const votePost = (post, direction) => voteItem(post, direction, 'posts')
+export const voteComment = (comment, direction) =>
+  voteItem(comment, direction, 'comments')
 
-  return fetch(`${api}/${endPoint}/${itemId}`, { headers })
-    .then(handleErrors)
-    .then(response => response.json())
-    .catch(error => {
-      return { error: error.message }
-    })
-}
-
-export const getAllPosts = () =>
-  fetch(`${api}/posts`, { headers }).then(res => res.json())
-
-export const voteItem = (item, apiValue, endPoint) =>
+const voteItem = (item, apiValue, endPoint) =>
   fetch(`${api}/${endPoint}/${item.id}`, {
     headers,
     method: 'POST',
@@ -42,50 +28,17 @@ export const voteItem = (item, apiValue, endPoint) =>
       option: apiValue
     })
   })
-    .then(handleErrors)
-    .then(response => response.json())
-    .catch(error => {
-      return { error: error.message }
-    })
 
-export const getCategories = () =>
-  fetch(`${api}/categories`, { headers }).then(res =>
-    res.json().then(res => res.categories)
-  )
-
-export const submitPost = ({ post, edit }) => {
-  const method = edit ? 'PUT' : 'POST'
-  const id = edit ? post.id : null
-  return fetch(`${api}/posts/${id}`, {
+export const submitPost = (post, isNew) => {
+  const method = isNew ? 'POST' : 'PUT'
+  const url = !isNew ? `${api}/posts/${post.id}` : `${api}/posts`
+  return fetch(url, {
     headers,
     method: method,
     body: JSON.stringify(post)
-  }).then(response => response.json())
-}
-
-export const submitNewItem = (item, endPoint) => {
-  return fetch(`${api}/${endPoint}/`, {
-    headers,
-    method: 'POST',
-    body: JSON.stringify(item)
   })
-    .then(handleErrors)
-    .then(response => response.json())
-    .catch(error => {
-      return { error: error.message }
-    })
 }
+export const getCategories = () => fetch(`${api}/categories`, { headers })
 
-export const submitEditItem = (item, endPoint) => {
-  const id = item.id
-  return fetch(`${api}/${endPoint}/${id}`, {
-    headers,
-    method: 'PUT',
-    body: JSON.stringify(item)
-  })
-    .then(handleErrors)
-    .then(response => response.json())
-    .catch(error => {
-      return { error: error.message }
-    })
-}
+export const getComments = postId =>
+  fetch(`${api}/posts/${postId}/comments`, { headers })

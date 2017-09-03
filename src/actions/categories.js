@@ -1,30 +1,21 @@
 import * as ReadableAPI from '../utils/ReadableAPI'
 
-export const REQUEST_CATEGORIES = 'REQUEST_CATEGORIES'
-export const RECEIVE_CATEGORIES = 'RECEIVE_CATEGORIES'
+export const LOAD_CATEGORIES_REQUEST = 'LOAD_CATEGORIES_REQUEST'
+export const LOAD_CATEGORIES_SUCCESS = 'LOAD_CATEGORIES_SUCCESS'
+export const LOAD_CATEGORIES_FAILURE = 'LOAD_CATEGORIES_FAILURE'
 
-function requestCategories() {
+export function loadCategories() {
   return {
-    type: REQUEST_CATEGORIES,
-  }
-}
-
-function receiveCategories(categories) {
-  const categoriesObj = categories.reduce((categoriesAccumulator, category) => {
-    categoriesAccumulator[category.name] = category
-    return categoriesAccumulator
-  }, {})
-  return {
-    type: RECEIVE_CATEGORIES,
-    categories: categoriesObj,
-  }
-}
-
-export function fetchCategories() {
-  return function (dispatch) {
-    dispatch(requestCategories())
-    return ReadableAPI.getCategories().then((categories) => 
-      dispatch(receiveCategories(categories))
-    )
+    // Types of actions to emit before and after
+    types: [
+      LOAD_CATEGORIES_REQUEST,
+      LOAD_CATEGORIES_SUCCESS,
+      LOAD_CATEGORIES_FAILURE
+    ],
+    shouldCallAPI: state => !state.categories,
+    // Perform the fetching:
+    callAPI: () => ReadableAPI.getCategories(),
+    // Arguments to inject in begin/end actions
+    payload: {}
   }
 }

@@ -1,14 +1,71 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { voteComment } from '../actions/comments'
+import withVotes from '../helpers/withVotes'
+import moment from 'moment'
 
 const Comment = props => {
+  const { comment, upVote, downVote } = props
+
+  function handleUpVoteClick(e) {
+    e.preventDefault()
+    upVote(comment)
+  }
+  function handleDownVoteClick(e) {
+    e.preventDefault()
+    downVote(comment)
+  }
+
+  function formatTimeStamp(ts) {
+    return moment(ts).format('lll')
+  }
+
   return (
-    <p>
-      {props.body}
-    </p>
+    <article className="media">
+      <figure className="media-left">
+        <nav className="level is-marginless">
+          <div className="level-item is-size-5">
+            {comment.voteScore}
+          </div>
+        </nav>
+        <nav className="level">
+          <div className="level-item">
+            <a onClick={handleUpVoteClick}>
+              <span className="icon is-small">
+                <i className="fa fa-plus" />
+              </span>
+            </a>
+          </div>
+          <div className="level-item">
+            <a onClick={handleDownVoteClick}>
+              <span className="icon is-small">
+                <i className="fa fa-minus" />
+              </span>
+            </a>
+          </div>
+        </nav>
+      </figure>
+      <div className="media-content">
+        <div className="content">
+          <p>
+            <strong>
+              {comment.author}
+            </strong>
+            <br />
+            {comment.body}
+            <br />
+            <small>
+              <a>Edit</a> · <a>Delete</a> · {formatTimeStamp(comment.timestamp)}
+            </small>
+          </p>
+        </div>
+      </div>
+    </article>
   )
 }
 Comment.propTypes = {
-  body: PropTypes.string.isRequired
+  comment: PropTypes.object.isRequired,
+  downVote: PropTypes.func.isRequired,
+  upVote: PropTypes.func.isRequired
 }
-export default Comment
+export default withVotes(Comment, voteComment)

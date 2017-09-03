@@ -2,10 +2,10 @@ import React, { Component } from 'react'
 import 'bulma/css/bulma.css'
 import 'font-awesome/css/font-awesome.min.css'
 import PostsPage from '../containers/PostsPage'
+import PostDetail from '../containers/PostDetail'
 import Header from '../components/Header'
-import PostForm from '../components/PostForm'
+import PostFormContainer from '../containers/PostFormContainer'
 import ErrorMessage from '../components/ErrorMessage'
-import CommentForm from '../components/CommentForm'
 import { Route, withRouter } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
@@ -21,20 +21,18 @@ class App extends Component {
         <Route path="/" component={Header} />
         {errorMessage && <ErrorMessage errorMessage={errorMessage} />}
         <Route exact path="/" component={PostsPage} />
-        <Route exact path="/posts/:id/:type?" component={PostForm} />
-        <Route exact path="/posts/:posts/" component={Header} />
-        <Route
-          exact
-          path="/posts/:postid/comments/:id?/:type?"
-          component={CommentForm}
-        />
+        <Route exact path="/post/new" component={PostFormContainer} />
+        <Route exact path="/posts/:postId/edit" component={PostFormContainer} />
+        <Route exact path="/posts/:postId" component={PostDetail} />
       </div>
     )
   }
 }
 
-function mapStateToProps(errorMessage) {
-  return errorMessage
+function mapStateToProps({ ui }) {
+  return {
+    errorMessage: ui.errorMessage
+  }
 }
 
 export default withRouter(connect(mapStateToProps, null)(App))

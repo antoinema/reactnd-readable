@@ -9,6 +9,7 @@ import registerServiceWorker from './registerServiceWorker'
 import rootReducer from './reducers'
 import { Provider } from 'react-redux'
 import { BrowserRouter } from 'react-router-dom'
+import callAPIMiddleware from './utils/callAPIMiddleware'
 
 const loggerMiddleware = createLogger()
 
@@ -16,7 +17,9 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 
 const store = createStore(
   rootReducer,
-  composeEnhancers(applyMiddleware(thunkMiddleware, loggerMiddleware))
+  composeEnhancers(
+    applyMiddleware(thunkMiddleware, loggerMiddleware, callAPIMiddleware)
+  )
 )
 
 ReactDOM.render(
