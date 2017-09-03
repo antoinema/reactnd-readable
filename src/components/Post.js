@@ -3,9 +3,11 @@ import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import moment from 'moment'
 import withVotes from '../helpers/withVotes'
+import { votePost } from '../actions/posts'
+import Comments from './Comments'
 
 function Post(props) {
-  const { post, upVote, downVote } = props
+  const { post, upVote, downVote, comments } = props
   function handleUpVoteClick(e) {
     e.preventDefault()
     upVote(post)
@@ -47,12 +49,16 @@ function Post(props) {
       <div className="media-content">
         <div className="content">
           <p>
-            <strong>{post.title}</strong> <small>{post.author}</small>{' '}
+            <strong>
+              {' '}<Link to={`/posts/${post.id}`}>{post.title}</Link>
+            </strong>{' '}
+            <small>{post.author}</small>{' '}
             <small>{formatTimeStamp(post.timestamp)}</small>
             <br />
             {post.body}
           </p>
         </div>
+        {comments && <Comments comments={comments} />}
       </div>
       <div className="media-right">
         <div className="field has-addons">
@@ -64,7 +70,7 @@ function Post(props) {
             </a>
           </p>
           <p className="control">
-            <Link to={`posts/${post.id}/edit`} className="button">
+            <Link to={`/posts/${post.id}/edit`} className="button">
               <span className="icon is-small">
                 <i className="fa fa-edit" />
               </span>
@@ -78,8 +84,9 @@ function Post(props) {
 
 Post.propTypes = {
   post: PropTypes.object,
+  comments: PropTypes.array,
   upVote: PropTypes.func.isRequired,
   downVote: PropTypes.func.isRequired
 }
 
-export default withVotes(Post, 'posts')
+export default withVotes(Post, votePost)

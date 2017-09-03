@@ -1,133 +1,110 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import { Field, reduxForm } from 'redux-form'
 import { withRouter } from 'react-router-dom'
-import withInitAndSubmit from '../helpers/withInitAndSubmit'
 
 class PostForm extends Component {
-  cancel = () => {
-    this.props.history.push('/')
+  cancel = e => {
+    e.preventDefault()
+    this.props.history.goBack()
   }
   render() {
-    const {
-      canSubmit,
-      isSubmitting,
-      validation,
-      fields,
-      handleInputChange,
-      categories,
-      handleSubmit
-    } = this.props
+    const { handleSubmit, categories, submitting } = this.props
 
     return (
       <section className="section">
-        <div className="field">
-          <label className="label">Author</label>
-          <div className="control has-icons-left">
-            <input
-              className={`input ${validation.author === false
-                ? 'is-danger'
-                : null}`}
-              type="text"
-              placeholder="Text input"
-              name="author"
-              onChange={handleInputChange}
-              value={fields.author}
-            />
-            <span className="icon is-small is-left">
-              <i className="fa fa-user" />
-            </span>
-          </div>
-        </div>
-
-        <div className="field">
-          <label className="label">Category</label>
-          <div className="control">
-            <div
-              className={`select ${validation.category === false
-                ? 'is-danger'
-                : null}`}
-            >
-              <select
-                value={fields.category}
-                onChange={handleInputChange}
-                name="category"
-              >
-                <option value="">Select Category</option>
-                {categories.map(category =>
-                  <option key={category.path} value={category.name}>
-                    {category.name}
-                  </option>
-                )}{' '}
-              </select>
+        <form onSubmit={handleSubmit}>
+          <div className="field">
+            <label className="label">Author</label>
+            <div className="control has-icons-left">
+              <Field
+                type="text"
+                placeholder="Text input"
+                name="author"
+                component="input"
+                className="input"
+              />
+              <span className="icon is-small is-left">
+                <i className="fa fa-user" />
+              </span>
             </div>
           </div>
-        </div>
 
-        <div className="field">
-          <label className="label">Title</label>
-          <div className="control">
-            <input
-              className={`input ${validation.title === false
-                ? 'is-danger'
-                : null}`}
-              type="text"
-              placeholder="Text input"
-              onChange={handleInputChange}
-              name="title"
-              value={fields.title}
-            />
+          <div className="field">
+            <label className="label">Category</label>
+            <div className="control">
+              <div className="select">
+                <Field name="category" component="select">
+                  <option value="">Select Category</option>
+                  {categories.map(category =>
+                    <option key={category.path} value={category.name}>
+                      {category.name}
+                    </option>
+                  )}
+                </Field>
+              </div>
+            </div>
           </div>
-        </div>
 
-        <div className="field">
-          <label className="label">Message</label>
-          <div
-            className={`control ${validation.body === false
-              ? 'is-danger'
-              : null}`}
-          >
-            <textarea
-              className="textarea"
-              placeholder="Textarea"
-              onChange={this.props.handleInputChange}
-              name="body"
-              value={fields.body}
-            />
+          <div className="field">
+            <label className="label">Title</label>
+            <div className="control">
+              <Field
+                type="text"
+                placeholder="Text input"
+                name="title"
+                component="input"
+                className="input"
+              />
+            </div>
           </div>
-        </div>
 
-        <div className="field is-grouped">
-          <div className="control">
-            <button
-              className={`button is-primary ${isSubmitting
-                ? 'is-loading'
-                : null}`}
-              disabled={!canSubmit}
-              onClick={handleSubmit}
-            >
-              Post
-            </button>
+          <div className="field">
+            <label className="label">Message</label>
+            <div className="control">
+              <Field
+                className="textarea"
+                placeholder="Textarea"
+                name="body"
+                component="textarea"
+              />
+            </div>
           </div>
-          <div className="control">
-            <button className="button is-link" onClick={this.cancel}>
-              Cancel
-            </button>
+
+          <div className="field is-grouped">
+            <div className="control">
+              <button
+                className={`button is-primary ${submitting
+                  ? 'is-loading'
+                  : null}`}
+                disabled={submitting}
+                onClick={handleSubmit}
+              >
+                Post
+              </button>
+            </div>
+            <div className="control">
+              <button className="button is-link" onClick={this.cancel}>
+                Cancel
+              </button>
+            </div>
           </div>
-        </div>
+        </form>
       </section>
     )
   }
 }
 
 PostForm.propTypes = {
-  handleInputChange: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
-  history: PropTypes.object,
-  canSubmit: PropTypes.bool.isRequired,
-  isSubmitting: PropTypes.bool.isRequired,
+  history: PropTypes.object.isRequired,
   categories: PropTypes.array.isRequired,
-  validation: PropTypes.object,
-  fields: PropTypes.object
+  submitting: PropTypes.bool.isRequired
 }
 
-export default withRouter(withInitAndSubmit(PostForm, 'posts'))
+export default withRouter(
+  reduxForm({
+    form: 'posts',
+    enableReinitialize: true
+  })(PostForm)
+)

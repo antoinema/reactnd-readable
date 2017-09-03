@@ -22,7 +22,7 @@ function List(props) {
 List.propTypes = {
   renderItem: PropTypes.func.isRequired,
   items: PropTypes.array.isRequired,
-  isFetching: PropTypes.bool.isRequired
+  isFetching: PropTypes.bool
 }
 
 List.defaultProps = {
