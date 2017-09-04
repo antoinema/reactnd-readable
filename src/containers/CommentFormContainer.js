@@ -6,6 +6,7 @@ import { submitComment, loadComment } from '../actions/comments'
 
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
+import { reset } from 'redux-form'
 
 class CommentFormContainer extends Component {
   componentWillMount() {
@@ -16,9 +17,10 @@ class CommentFormContainer extends Component {
   }
 
   handleSubmit = fields => {
+    const { submitComment, resetCommentForm } = this.props
     const parentPostId = this.props.parentPostId
 
-    this.props.submitComment(fields, parentPostId)
+    submitComment(fields, parentPostId).then(() => resetCommentForm())
   }
 
   render() {
@@ -42,12 +44,14 @@ function mapStateToProps(state, ownProps) {
 function mapDispatchToProps(dispatch) {
   return {
     loadComment: data => dispatch(loadComment(data)),
-    submitComment: (data, parentId) => dispatch(submitComment(data, parentId))
+    submitComment: (data, parentId) => dispatch(submitComment(data, parentId)),
+    resetCommentForm: () => dispatch(reset('comments'))
   }
 }
 CommentFormContainer.propTypes = {
   submitComment: PropTypes.func.isRequired,
   loadComment: PropTypes.func.isRequired,
+  resetCommentForm: PropTypes.func,
   isFetching: PropTypes.bool.isRequired,
   commentId: PropTypes.number,
   parentPostId: PropTypes.number.isRequired,

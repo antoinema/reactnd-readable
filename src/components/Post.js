@@ -5,6 +5,7 @@ import moment from 'moment'
 import withVotes from '../helpers/withVotes'
 import { votePost } from '../actions/posts'
 import Comments from './Comments'
+import CommentFormContainer from '../containers/CommentFormContainer'
 
 function Post(props) {
   const { post, upVote, downVote, comments } = props
@@ -59,6 +60,7 @@ function Post(props) {
           </p>
         </div>
         {comments && <Comments comments={comments} />}
+        <CommentFormContainer parentPostId={post.id} showSubmit={true} />
       </div>
       <div className="media-right">
         <div className="field has-addons">

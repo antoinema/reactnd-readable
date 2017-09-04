@@ -4,7 +4,7 @@ import { Field, reduxForm } from 'redux-form'
 import { withRouter } from 'react-router-dom'
 
 const CommentForm = props => {
-  const { handleSubmit } = props
+  const { handleSubmit, showSubmit } = props
   return (
     <form onSubmit={handleSubmit}>
       <div className="field">
@@ -12,7 +12,7 @@ const CommentForm = props => {
         <div className="control has-icons-left">
           <Field
             type="text"
-            placeholder="Text input"
+            placeholder="Your name"
             name="author"
             component="input"
             className="input"
@@ -27,18 +27,27 @@ const CommentForm = props => {
         <div className="control">
           <Field
             className="textarea"
-            placeholder="Textarea"
+            placeholder="Add a comment..."
             name="body"
             component="textarea"
           />
         </div>
       </div>
+      {showSubmit &&
+        <div className="field">
+          <p className="control">
+            <button className="button" onClick={handleSubmit}>
+              Post comment
+            </button>
+          </p>
+        </div>}
     </form>
   )
 }
 
 CommentForm.propTypes = {
-  handleSubmit: PropTypes.func.isRequired
+  handleSubmit: PropTypes.func.isRequired,
+  showSubmit: PropTypes.bool
 }
 
 export default withRouter(

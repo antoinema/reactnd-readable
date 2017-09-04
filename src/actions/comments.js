@@ -52,7 +52,7 @@ export const SUBMIT_COMMENT_REQUEST = 'SUBMIT_COMMENT_REQUEST'
 export const SUBMIT_COMMENT_SUCCESS = 'SUBMIT_COMMENT_SUCCESS'
 export const SUBMIT_COMMENT_FAILURE = 'SUBMIT_COMMENT_FAILURE'
 
-export function submitComment(fields) {
+export function submitComment(fields, parentId) {
   const comment =
     fields.id === undefined
       ? {
@@ -60,7 +60,8 @@ export function submitComment(fields) {
         id: uuidv1(),
         timestamp: Date.now(),
         voteScore: 1,
-        deleted: false
+        deleted: false,
+        parentId
       }
       : fields
   const isNew = fields.id === undefined
