@@ -4,11 +4,9 @@ import { Link } from 'react-router-dom'
 import moment from 'moment'
 import withVotes from '../helpers/withVotes'
 import { votePost } from '../actions/posts'
-import Comments from './Comments'
-import CommentFormContainer from '../containers/CommentFormContainer'
 
 function Post(props) {
-  const { post, upVote, downVote, comments } = props
+  const { post, upVote, downVote } = props
   function handleUpVoteClick(e) {
     e.preventDefault()
     upVote(post)
@@ -59,8 +57,7 @@ function Post(props) {
             {post.body}
           </p>
         </div>
-        {comments && <Comments comments={comments} />}
-        <CommentFormContainer parentPostId={post.id} showSubmit={true} />
+        {props.children}
       </div>
       <div className="media-right">
         <div className="field has-addons">
@@ -88,7 +85,8 @@ Post.propTypes = {
   post: PropTypes.object,
   comments: PropTypes.array,
   upVote: PropTypes.func.isRequired,
-  downVote: PropTypes.func.isRequired
+  downVote: PropTypes.func.isRequired,
+  children: PropTypes.node
 }
 
 export default withVotes(Post, votePost)
