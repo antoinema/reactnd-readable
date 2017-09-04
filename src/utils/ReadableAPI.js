@@ -29,13 +29,18 @@ const voteItem = (item, apiValue, endPoint) =>
     })
   })
 
-export const submitPost = (post, isNew) => {
+export const submitComment = (comment, isNew) =>
+  submitItem(comment, isNew, 'comments')
+
+export const submitPost = (post, isNew) => submitItem(post, isNew, 'posts')
+
+export const submitItem = (item, isNew, endPoint) => {
   const method = isNew ? 'POST' : 'PUT'
-  const url = !isNew ? `${api}/posts/${post.id}` : `${api}/posts`
+  const url = !isNew ? `${api}/${endPoint}/${item.id}` : `${api}/${endPoint}`
   return fetch(url, {
     headers,
     method: method,
-    body: JSON.stringify(post)
+    body: JSON.stringify(item)
   })
 }
 export const getCategories = () => fetch(`${api}/categories`, { headers })

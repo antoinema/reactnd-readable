@@ -1,4 +1,5 @@
 import * as ReadableAPI from '../utils/ReadableAPI'
+import { v1 as uuidv1 } from 'uuid'
 
 export const LOAD_COMMENT_REQUEST = 'LOAD_COMMENT_REQUEST'
 export const LOAD_COMMENT_SUCCESS = 'LOAD_COMMENT_SUCCESS'
@@ -50,4 +51,26 @@ export function voteComment(comment, direction) {
 export const SUBMIT_COMMENT_REQUEST = 'SUBMIT_COMMENT_REQUEST'
 export const SUBMIT_COMMENT_SUCCESS = 'SUBMIT_COMMENT_SUCCESS'
 export const SUBMIT_COMMENT_FAILURE = 'SUBMIT_COMMENT_FAILURE'
-// TODO
+
+export function submitComment(fields) {
+  const comment =
+    fields.id === undefined
+      ? {
+        ...fields,
+        id: uuidv1(),
+        timestamp: Date.now(),
+        voteScore: 1,
+        deleted: false
+      }
+      : fields
+  const isNew = fields.id === undefined
+  return {
+    types: [
+      SUBMIT_COMMENT_REQUEST,
+      SUBMIT_COMMENT_SUCCESS,
+      SUBMIT_COMMENT_FAILURE
+    ],
+    callAPI: () => ReadableAPI.submitComment(comment, isNew),
+    payload: { fields, isNew }
+  }
+}

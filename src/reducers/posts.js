@@ -46,7 +46,7 @@ function postsById(state = {}, action) {
       }, state)
     case LOAD_COMMENT_SUCCESS:
     case SUBMIT_COMMENT_SUCCESS:
-      return addComment(state, action)
+      return addComment(state, action.response)
 
     default:
       return state
@@ -100,7 +100,9 @@ function addComment(state, comment) {
     ...state,
     [postId]: {
       ...post,
-      comments: post.comments ? post.comments.concat(comment.id) : [comment.id]
+      comments: post.comments
+        ? [...new Set([...post.comments, comment.id])]
+        : [comment.id]
     }
   }
 }

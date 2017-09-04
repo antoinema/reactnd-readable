@@ -9,6 +9,10 @@ import {
   LOAD_POST_FAILURE
 } from '../actions/posts'
 
+import { SUBMIT_COMMENT_SUCCESS } from '../actions/comments'
+
+import { SHOW_COMMENT_EDIT, HIDE_COMMENT_EDIT } from '../actions/ui'
+
 function isFetching(state = true, action) {
   switch (action.type) {
     case LOAD_POST_REQUEST:
@@ -24,6 +28,30 @@ function isFetching(state = true, action) {
   }
 }
 
+function isEditingComment(state = false, action) {
+  switch (action.type) {
+    case SHOW_COMMENT_EDIT:
+      return true
+    case SUBMIT_COMMENT_SUCCESS:
+    case HIDE_COMMENT_EDIT:
+      return false
+    default:
+      return state
+  }
+}
+
+function currentlyEditingComment(state = null, action) {
+  switch (action.type) {
+    case SHOW_COMMENT_EDIT:
+      return action.commentId
+    case SUBMIT_COMMENT_SUCCESS:
+    case HIDE_COMMENT_EDIT:
+      return null
+    default:
+      return state
+  }
+}
+
 function errorMessage(state = null, action) {
   const { error } = action
   if (error) {
@@ -34,7 +62,9 @@ function errorMessage(state = null, action) {
 
 const ui = combineReducers({
   isFetching,
-  errorMessage
+  errorMessage,
+  isEditingComment,
+  currentlyEditingComment
 })
 
 export default ui
