@@ -43,6 +43,16 @@ export const submitItem = (item, isNew, endPoint) => {
     body: JSON.stringify(item)
   })
 }
+
+export const deleteComment = comment => deleteItem(comment, 'comments')
+export const deletePost = post => deleteItem(post, 'posts')
+
+export const deleteItem = (item, endPoint) =>
+  fetch(`${api}/${endPoint}/${item.id}`, {
+    headers,
+    method: 'DELETE'
+  })
+
 export const getCategories = () => fetch(`${api}/categories`, { headers })
 
 export const getComments = postId =>

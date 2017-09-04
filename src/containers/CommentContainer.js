@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import Comment from '../components/Comment'
 import { showCommentEdit, hideCommentEdit } from '../actions/ui'
+import { deleteComment } from '../actions/comments'
+
 import { connect } from 'react-redux'
 
 class CommentContainer extends Component {
@@ -18,7 +20,8 @@ CommentContainer.propTypes = {
 const mapDispatchToProps = dispatch => {
   return {
     showCommentEdit: data => dispatch(showCommentEdit(data)),
-    hideCommentEdit: () => dispatch(hideCommentEdit())
+    hideCommentEdit: () => dispatch(hideCommentEdit()),
+    deleteComment: data => dispatch(deleteComment(data))
   }
 }
 

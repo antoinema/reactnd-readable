@@ -54,7 +54,7 @@ CommentFormContainer.propTypes = {
   resetCommentForm: PropTypes.func,
   isFetching: PropTypes.bool.isRequired,
   commentId: PropTypes.number,
-  parentPostId: PropTypes.number.isRequired,
+  parentPostId: PropTypes.string.isRequired,
   history: PropTypes.object
 }
 

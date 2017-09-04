@@ -2,7 +2,8 @@ import {
   LOAD_COMMENT_SUCCESS,
   LOAD_COMMENTS_SUCCESS,
   SUBMIT_COMMENT_SUCCESS,
-  VOTE_COMMENT_SUCCESS
+  VOTE_COMMENT_SUCCESS,
+  DELETE_COMMENT_SUCCESS
 } from '../actions/comments'
 
 function addEditCommentEntry(state, comment) {
@@ -29,6 +30,14 @@ export default function commentsById(state = {}, action) {
           ...action.comment,
           voteScore:
             action.comment.voteScore + (action.direction === 'upVote' ? 1 : -1)
+        }
+      }
+    case DELETE_COMMENT_SUCCESS:
+      return {
+        ...state,
+        [action.comment.id]: {
+          ...action.comment,
+          deleted: true
         }
       }
     default:

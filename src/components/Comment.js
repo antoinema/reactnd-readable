@@ -19,6 +19,10 @@ const Comment = props => {
     e.preventDefault()
     props.showCommentEdit(comment.id)
   }
+  function handleDeleteClick(e) {
+    e.preventDefault()
+    props.deleteComment(comment)
+  }
 
   function formatTimeStamp(ts) {
     return moment(ts).format('lll')
@@ -59,7 +63,8 @@ const Comment = props => {
             {comment.body}
             <br />
             <small>
-              <a onClick={handleEditClick}>Edit</a> · <a>Delete</a> ·
+              <a onClick={handleEditClick}>Edit</a> ·{' '}
+              <a onClick={handleDeleteClick}>Delete</a> ·
               {formatTimeStamp(comment.timestamp)}
             </small>
           </p>
@@ -72,6 +77,7 @@ Comment.propTypes = {
   comment: PropTypes.object.isRequired,
   downVote: PropTypes.func.isRequired,
   upVote: PropTypes.func.isRequired,
-  showCommentEdit: PropTypes.func.isRequired
+  showCommentEdit: PropTypes.func.isRequired,
+  deleteComment: PropTypes.func.isRequired
 }
 export default withVotes(Comment, voteComment)

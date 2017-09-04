@@ -75,3 +75,19 @@ export function submitComment(fields, parentId) {
     payload: { fields, isNew }
   }
 }
+
+export const DELETE_COMMENT_REQUEST = 'DELETE_COMMENT_REQUEST'
+export const DELETE_COMMENT_SUCCESS = 'DELETE_COMMENT_SUCCESS'
+export const DELETE_COMMENT_FAILURE = 'DELETE_COMMENT_FAILURE'
+
+export function deleteComment(comment) {
+  return {
+    types: [
+      DELETE_COMMENT_REQUEST,
+      DELETE_COMMENT_SUCCESS,
+      DELETE_COMMENT_FAILURE
+    ],
+    callAPI: () => ReadableAPI.deleteComment(comment),
+    payload: { comment }
+  }
+}
