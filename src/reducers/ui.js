@@ -11,7 +11,11 @@ import {
 
 import { SUBMIT_COMMENT_SUCCESS } from '../actions/comments'
 
-import { SHOW_COMMENT_EDIT, HIDE_COMMENT_EDIT } from '../actions/ui'
+import {
+  SHOW_COMMENT_EDIT,
+  HIDE_COMMENT_EDIT,
+  SET_ERROR_MESSAGE
+} from '../actions/ui'
 
 function isFetching(state = true, action) {
   switch (action.type) {
@@ -56,6 +60,10 @@ function errorMessage(state = null, action) {
   const { error } = action
   if (error) {
     return action.error
+  }
+  switch (action.type) {
+    case SET_ERROR_MESSAGE:
+      return action.message
   }
   return state
 }

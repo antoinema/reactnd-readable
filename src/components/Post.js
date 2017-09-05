@@ -1,12 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Link } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 import moment from 'moment'
 import withVotes from '../helpers/withVotes'
 import { votePost } from '../actions/posts'
 
 function Post(props) {
-  const { post, upVote, downVote } = props
+  const { post, upVote, downVote, deletePost } = props
   function handleUpVoteClick(e) {
     e.preventDefault()
     upVote(post)
@@ -14,6 +14,11 @@ function Post(props) {
   function handleDownVoteClick(e) {
     e.preventDefault()
     downVote(post)
+  }
+
+  function handleDeleteClick(e) {
+    e.preventDefault()
+    deletePost(post)
   }
 
   function formatTimeStamp(ts) {
@@ -62,14 +67,20 @@ function Post(props) {
       <div className="media-right">
         <div className="field has-addons">
           <p className="control">
-            <a className="button">
+            <a className="button" onClick={handleDeleteClick}>
               <span className="icon is-small">
                 <i className="fa fa-trash" />
               </span>
             </a>
           </p>
           <p className="control">
-            <Link to={`/posts/${post.id}/edit`} className="button">
+            <Link
+              to={{
+                pathname: `/posts/${post.id}/edit`,
+                state: { from: props.location.pathname }
+              }}
+              className="button"
+            >
               <span className="icon is-small">
                 <i className="fa fa-edit" />
               </span>
@@ -83,10 +94,11 @@ function Post(props) {
 
 Post.propTypes = {
   post: PropTypes.object,
-  comments: PropTypes.array,
   upVote: PropTypes.func.isRequired,
   downVote: PropTypes.func.isRequired,
-  children: PropTypes.node
+  deletePost: PropTypes.func.isRequired,
+  children: PropTypes.node.apply,
+  location: PropTypes.object
 }
 
-export default withVotes(Post, votePost)
+export default withRouter(withVotes(Post, votePost))

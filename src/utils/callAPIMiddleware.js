@@ -34,14 +34,23 @@ export default function callAPIMiddleware({ dispatch, getState }) {
     return callAPI()
       .then(handleErrors)
       .then(response =>
-        response.json().then(response =>
-          dispatch(
-            Object.assign({}, payload, {
-              response,
-              type: successType
-            })
+        response
+          .text() // this hack is needed because the server return a status 200 with empty body
+          .then(response => {
+            if (response) {
+              return JSON.parse(response)
+            } else {
+              return
+            }
+          })
+          .then(response =>
+            dispatch(
+              Object.assign({}, payload, {
+                response,
+                type: successType
+              })
+            )
           )
-        )
       )
       .catch(error =>
         dispatch(

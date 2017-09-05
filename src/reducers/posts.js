@@ -3,7 +3,8 @@ import {
   LOAD_POST_SUCCESS,
   LOAD_POSTS_SUCCESS,
   SUBMIT_POST_SUCCESS,
-  VOTE_POST_SUCCESS
+  VOTE_POST_SUCCESS,
+  DELETE_POST_SUCCESS
 } from '../actions/posts'
 
 import {
@@ -38,6 +39,14 @@ function postsById(state = {}, action) {
           ...action.post,
           voteScore:
             action.post.voteScore + (action.direction === 'upVote' ? 1 : -1)
+        }
+      }
+    case DELETE_POST_SUCCESS:
+      return {
+        ...state,
+        [action.post.id]: {
+          ...action.post,
+          deleted: true
         }
       }
     case LOAD_COMMENTS_SUCCESS:

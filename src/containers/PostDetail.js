@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { loadPost } from '../actions/posts'
+import { loadPost, deletePost } from '../actions/posts'
 import { loadComments } from '../actions/comments'
 import Post from '../components/Post'
 import { withRouter } from 'react-router-dom'
@@ -10,7 +10,11 @@ import { getCommentsForId } from '../reducers'
 import CommentFormContainer from './CommentFormContainer'
 import Modal, { ModalCardFooter } from '../components/Modal'
 import Comments from '../components/Comments'
-import { showCommentEdit, hideCommentEdit } from '../actions/ui'
+import {
+  showCommentEdit,
+  hideCommentEdit,
+  setErrorMessage
+} from '../actions/ui'
 import { submit } from 'redux-form'
 
 class PostDetail extends Component {
@@ -26,8 +30,11 @@ class PostDetail extends Component {
     isEditingComment: PropTypes.bool,
     showCommentEdit: PropTypes.func.isRequired,
     hideCommentEdit: PropTypes.func.isRequired,
-    submitEdit: PropTypes.func.isRequired,
-    currentlyEditingComment: PropTypes.string
+    submitEditComment: PropTypes.func.isRequired,
+    deletePost: PropTypes.func.isRequired,
+    currentlyEditingComment: PropTypes.string,
+    setErrorMessage: PropTypes.func.isRequired,
+    location: PropTypes.object
   }
 
   state = {
@@ -54,7 +61,7 @@ class PostDetail extends Component {
       showCommentEdit,
       hideCommentEdit,
       isEditingComment,
-      submitEdit
+      submitEditComment
     } = this.props
     return (
       <Modal
@@ -65,7 +72,7 @@ class PostDetail extends Component {
         showClose={true}
         footer={
           <ModalCardFooter>
-            <button className="button is-success" onClick={submitEdit}>
+            <button className="button is-success" onClick={submitEditComment}>
               Save changes
             </button>
             <button className="button" onClick={hideCommentEdit}>
@@ -81,19 +88,29 @@ class PostDetail extends Component {
       </Modal>
     )
   }
+
+  handleDeletePost = post => {
+    this.props.deletePost(post).then(() => this.props.history.push('/'))
+  }
+
   render() {
     const {
       post,
       comments,
       isFetching,
       isEditingComment,
-      currentlyEditingComment
+      currentlyEditingComment,
+      setErrorMessage
     } = this.props
     if (isFetching) return <Loading />
+    if (!post) {
+      setErrorMessage('Could not find post')
+      return null
+    }
 
     return (
       <div className="section">
-        <Post key={post.id} post={post}>
+        <Post key={post.id} post={post} deletePost={this.handleDeletePost}>
           {comments && <Comments comments={comments} />}
           <CommentFormContainer parentPostId={post.id} showSubmit={true} />
         </Post>
@@ -123,7 +140,9 @@ function mapDispatchToProps(dispatch) {
     loadComments: data => dispatch(loadComments(data)),
     showCommentEdit: () => dispatch(showCommentEdit()),
     hideCommentEdit: () => dispatch(hideCommentEdit()),
-    submitEdit: () => dispatch(submit('comments'))
+    submitEditComment: () => dispatch(submit('comments')),
+    deletePost: data => dispatch(deletePost(data)),
+    setErrorMessage: data => dispatch(setErrorMessage(data))
   }
 }
 

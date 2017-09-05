@@ -65,3 +65,15 @@ export function votePost(post, direction) {
     payload: { post, direction }
   }
 }
+
+export const DELETE_POST_REQUEST = 'DELETE_POST_REQUEST'
+export const DELETE_POST_SUCCESS = 'DELETE_POST_SUCCESS'
+export const DELETE_POST_FAILURE = 'DELETE_POST_FAILURE'
+
+export function deletePost(post) {
+  return {
+    types: [DELETE_POST_REQUEST, DELETE_POST_SUCCESS, DELETE_POST_FAILURE],
+    callAPI: () => ReadableAPI.deletePost(post),
+    payload: { post }
+  }
+}

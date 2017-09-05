@@ -1,4 +1,4 @@
-import { loadPosts } from '../actions/posts'
+import { loadPosts, deletePost } from '../actions/posts'
 import { loadCategories } from '../actions/categories'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
@@ -17,8 +17,9 @@ class PostsPage extends Component {
     loadCategories()
   }
 
-  renderPost(post) {
-    return <Post key={post.id} post={post} />
+  renderPost = post => {
+    if (post.deleted) return
+    return <Post key={post.id} post={post} deletePost={this.props.deletePost} />
   }
 
   render() {
@@ -58,7 +59,8 @@ PostsPage.propTypes = {
   isFetching: PropTypes.bool.isRequired,
   loadPosts: PropTypes.func.isRequired,
   categories: PropTypes.array.isRequired,
-  loadCategories: PropTypes.func.isRequired
+  loadCategories: PropTypes.func.isRequired,
+  deletePost: PropTypes.func.isRequired
 }
 
 function mapStateToProps(state) {
@@ -70,7 +72,8 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     loadPosts: () => dispatch(loadPosts()),
-    loadCategories: () => dispatch(loadCategories())
+    loadCategories: () => dispatch(loadCategories()),
+    deletePost: data => dispatch(deletePost(data))
   }
 }
 

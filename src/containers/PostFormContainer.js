@@ -17,7 +17,10 @@ class PostFormContainer extends Component {
   }
 
   handleSubmit = fields => {
-    this.props.submitPost(fields).then(() => this.props.history.push('/'))
+    const from = this.props.location.state
+      ? this.props.location.state.from || '/'
+      : '/'
+    this.props.submitPost(fields).then(() => this.props.history.push(from))
   }
 
   render() {
@@ -58,7 +61,8 @@ PostFormContainer.propTypes = {
   isFetching: PropTypes.bool.isRequired,
   postId: PropTypes.number,
   match: PropTypes.object,
-  history: PropTypes.object
+  history: PropTypes.object,
+  location: PropTypes.object
 }
 
 export default withRouter(
