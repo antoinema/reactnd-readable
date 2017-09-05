@@ -53,12 +53,19 @@ PostsPage.propTypes = {
   loadPosts: PropTypes.func.isRequired,
   categories: PropTypes.array.isRequired,
   loadCategories: PropTypes.func.isRequired,
-  deletePost: PropTypes.func.isRequired
+  deletePost: PropTypes.func.isRequired,
+  category: PropTypes.string.isRequired,
+  loadComments: PropTypes.func.isRequired
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state, ownProps) {
+  const category = ownProps.match.params.category || 'all'
+
   return {
-    posts: getVisiblePosts(state, 'all')
+    posts: getVisiblePosts(state, category),
+    categories: getCategories(state),
+    isFetching: state.ui.isFetching,
+    category
   }
 }
 
@@ -66,8 +73,11 @@ function mapDispatchToProps(dispatch) {
   return {
     loadPosts: () => dispatch(loadPosts()),
     loadCategories: () => dispatch(loadCategories()),
-    deletePost: data => dispatch(deletePost(data))
+    deletePost: data => dispatch(deletePost(data)),
+    loadComments: data => dispatch(loadComments(data))
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(PostsPage)
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(PostsPage)
+)

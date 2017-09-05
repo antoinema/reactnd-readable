@@ -54,11 +54,16 @@ function Post(props) {
         <div className="content">
           <p>
             <strong>
-              {' '}<Link to={`/posts/${post.id}`}>{post.title}</Link>
+              <Link to={`/posts/${post.id}`}>
+                {post.title}
+              </Link>
             </strong>{' '}
+            {post.comments &&
+              <span className="tag is-rounded">
+                {post.comments.length}
+              </span>}{' '}
             <small>{post.author}</small>{' '}
-            <small>{formatTimeStamp(post.timestamp)}</small>
-            <br />
+            <small>{formatTimeStamp(post.timestamp)}</small> <br />
             {post.body}
           </p>
         </div>

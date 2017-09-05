@@ -10,7 +10,8 @@ import {
 import {
   LOAD_COMMENT_SUCCESS,
   LOAD_COMMENTS_SUCCESS,
-  SUBMIT_COMMENT_SUCCESS
+  SUBMIT_COMMENT_SUCCESS,
+  DELETE_COMMENT_SUCCESS
 } from '../actions/comments'
 
 function addEditPostEntry(state, post) {
@@ -56,7 +57,16 @@ function postsById(state = {}, action) {
     case LOAD_COMMENT_SUCCESS:
     case SUBMIT_COMMENT_SUCCESS:
       return addComment(state, action.response)
-
+    case DELETE_COMMENT_SUCCESS:
+      return {
+        ...state,
+        [action.comment.parentId]: {
+          ...state[action.comment.parentId],
+          comments: state[action.comment.parentId].comments.filter(item => {
+            return item !== action.comment.id
+          })
+        }
+      }
     default:
       return state
   }

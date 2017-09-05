@@ -21,8 +21,9 @@ export default function commentsById(state = {}, action) {
       return addEditCommentEntry(state, response)
     case LOAD_COMMENTS_SUCCESS:
       return response.reduce((comments, comment) => {
-        return addEditCommentEntry(comments, comment)
-      }, {})
+        const tempState = addEditCommentEntry(comments, comment)
+        return tempState
+      }, state)
     case VOTE_COMMENT_SUCCESS:
       return {
         ...state,

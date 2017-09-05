@@ -125,6 +125,9 @@ function mapStateToProps(state, ownProps) {
   const { isFetching, isEditingComment, currentlyEditingComment } = ui
   const { match } = ownProps
   const postId = match.params.postId
+  console.log('kikkoo')
+  console.log(getCommentsForId(state, postId))
+
   return {
     post: posts.postsById[postId],
     comments: getCommentsForId(state, postId),
