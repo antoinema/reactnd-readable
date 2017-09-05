@@ -1,6 +1,12 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
+import PropTypes from 'prop-types'
 
 class Stats extends Component {
+  static propTypes = {
+    nbPost: PropTypes.number.isRequired,
+    children: PropTypes.node
+  }
   render() {
     return (
       <section className="section">
@@ -9,16 +15,16 @@ class Stats extends Component {
             <div className="level-left">
               <div className="level-item">
                 <p className="title is-4">
-                  <strong>123</strong> posts
+                  <strong>{this.props.nbPost}</strong> posts
                 </p>
               </div>
               <p className="level-item">
-                <Link to="/posts/create" className="button is-primary">
+                <Link to="/post/new" className="button is-primary">
                   New
                 </Link>
               </p>
             </div>
-            <Categories categories={this.props.categories} />
+            {this.props.children}
           </nav>
         </div>
       </section>

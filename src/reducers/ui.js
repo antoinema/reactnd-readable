@@ -64,8 +64,9 @@ function errorMessage(state = null, action) {
   switch (action.type) {
     case SET_ERROR_MESSAGE:
       return action.message
+    default:
+      return state
   }
-  return state
 }
 
 const ui = combineReducers({

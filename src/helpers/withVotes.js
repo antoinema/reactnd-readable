@@ -6,7 +6,6 @@ import { connect } from 'react-redux'
 function withVotes(Item, voteAction) {
   class ItemContainer extends Component {
     static propTypes = {
-      item: PropTypes.object,
       vote: PropTypes.func.isRequired
     }
 

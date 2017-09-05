@@ -2,7 +2,6 @@ import React from 'react'
 import thunkMiddleware from 'redux-thunk'
 import { createStore, applyMiddleware, compose } from 'redux'
 import ReactDOM from 'react-dom'
-import './index.css'
 import App from './containers/App'
 import { createLogger } from 'redux-logger'
 import registerServiceWorker from './registerServiceWorker'
@@ -18,7 +17,7 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 const store = createStore(
   rootReducer,
   composeEnhancers(
-    applyMiddleware(thunkMiddleware, loggerMiddleware, callAPIMiddleware)
+    applyMiddleware(thunkMiddleware, callAPIMiddleware, loggerMiddleware)
   )
 )
 
