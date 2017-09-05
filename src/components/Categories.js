@@ -1,18 +1,30 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { Link } from 'react-router-dom'
 
 function Categories(props) {
   return (
     <div className="level-right">
       <p className="level-item">
-        <strong>All</strong>
+        {props.current === 'all'
+          ? <strong>All</strong>
+          : <Link to={'/'} className="is-capitalized">
+              All
+          </Link>}
       </p>
       {props.categories &&
         props.categories.map(category =>
           <p className="level-item" key={category.name}>
-            <a className="is-capitalized">
-              {category.name}
-            </a>
+            {category.path === props.current
+              ? <strong className="is-capitalized">
+                {category.name}
+              </strong>
+              : <Link
+                to={`/category/${category.path}`}
+                className="is-capitalized"
+              >
+                {category.name}
+              </Link>}
           </p>
         )}
       <div className="level-item">Sort:</div>
@@ -28,7 +40,8 @@ function Categories(props) {
 }
 
 Categories.propTypes = {
-  categories: PropTypes.array
+  categories: PropTypes.array,
+  current: PropTypes.string
 }
 
 export default Categories

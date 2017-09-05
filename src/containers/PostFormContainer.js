@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import Loading from '../components/Loading'
 import { submitPost, loadPost } from '../actions/posts'
 import { loadCategories } from '../actions/categories'
+import { getCategories } from '../reducers'
 
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
@@ -12,8 +13,8 @@ class PostFormContainer extends Component {
   componentWillMount() {
     const { match, loadPost, loadCategories } = this.props
     const postId = this.props.postId || match.params.postId
-    postId && loadPost(postId)
     loadCategories()
+    postId && loadPost(postId)
   }
 
   handleSubmit = fields => {
@@ -33,16 +34,14 @@ class PostFormContainer extends Component {
 }
 
 function mapStateToProps(state, ownProps) {
-  const { posts, categories, ui } = state
+  const { posts, ui } = state
   const isFetching = ui.isFetching
   const { match } = ownProps
   const postId = ownProps.postId || match.params.postId
   return {
     initialValues: posts.postsById[postId],
     isFetching,
-    categories: categories
-      ? Object.keys(categories).map(key => categories[key])
-      : []
+    categories: getCategories(state)
   }
 }
 

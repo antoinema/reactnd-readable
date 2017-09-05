@@ -97,7 +97,7 @@ Post.propTypes = {
   upVote: PropTypes.func.isRequired,
   downVote: PropTypes.func.isRequired,
   deletePost: PropTypes.func.isRequired,
-  children: PropTypes.node.apply,
+  children: PropTypes.node,
   location: PropTypes.object
 }
 

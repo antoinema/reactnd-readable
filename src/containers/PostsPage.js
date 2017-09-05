@@ -5,45 +5,38 @@ import PropTypes from 'prop-types'
 import List from '../components/List'
 import Post from '../components/Post'
 import Categories from '../components/Categories'
-import { Link } from 'react-router-dom'
+import PostPageHeader from '../components/PostPageHeader'
 import { getVisiblePosts } from '../reducers'
+import { getCategories } from '../reducers'
+import { withRouter } from 'react-router-dom'
+import { loadComments } from '../actions/comments'
 
 import React, { Component } from 'react'
 
 class PostsPage extends Component {
   componentWillMount() {
-    const { loadPosts, loadCategories } = this.props
-    loadPosts()
+    const { loadPosts, loadCategories, loadComments } = this.props
+    loadPosts().then(() =>
+      this.props.posts.forEach(post => loadComments(post.id))
+    ) // we load comments to be able to display their number
     loadCategories()
   }
 
   renderPost = post => {
     if (post.deleted) return
+    //if (!post.comment) this.props.loadComments(post.id)
     return <Post key={post.id} post={post} deletePost={this.props.deletePost} />
   }
 
   render() {
     return (
       <div className="container">
-        <section className="section">
-          <div className="container">
-            <nav className="level">
-              <div className="level-left">
-                <div className="level-item">
-                  <p className="title is-4">
-                    <strong>123</strong> posts
-                  </p>
-                </div>
-                <p className="level-item">
-                  <Link to="/post/new" className="button is-primary">
-                    New
-                  </Link>
-                </p>
-              </div>
-              <Categories categories={this.props.categories} />
-            </nav>
-          </div>
-        </section>
+        <PostPageHeader nbPost={this.props.posts.length}>
+          <Categories
+            categories={this.props.categories}
+            current={this.props.category}
+          />
+        </PostPageHeader>
         <List
           renderItem={this.renderPost}
           items={this.props.posts}

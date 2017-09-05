@@ -14,3 +14,7 @@ export default function categories(state = null, action) {
       return state
   }
 }
+
+export const getCategories = categories => {
+  return categories ? Object.keys(categories).map(key => categories[key]) : []
+}

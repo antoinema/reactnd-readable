@@ -10,6 +10,16 @@ function List(props) {
     return <Loading />
   }
 
+  if (isEmpty) {
+    return (
+      <div className="section">
+        <article className="message">
+          <div className="message-body">No posts</div>
+        </article>
+      </div>
+    )
+  }
+
   return (
     <section className="section">
       <div className="container">
@@ -23,10 +33,6 @@ List.propTypes = {
   renderItem: PropTypes.func.isRequired,
   items: PropTypes.array.isRequired,
   isFetching: PropTypes.bool
-}
-
-List.defaultProps = {
-  isFetching: true
 }
 
 export default List

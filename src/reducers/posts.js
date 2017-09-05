@@ -87,15 +87,14 @@ export const getVisiblePosts = (state, filter) => {
   const allPosts = getAllPosts(state)
   switch (filter) {
     case 'all':
-      return allPosts
+      return allPosts.filter(p => !p.deleted)
     default:
-      return allPosts.filter(p => p.category === filter)
+      return allPosts.filter(p => p.category === filter && !p.deleted)
   }
 }
 
 export const getCommentsForId = (state, postId) => {
   const post = state.posts.postsById[postId]
-
   return (
     post && post.comments && post.comments.map(id => state.commentsById[id])
   )
