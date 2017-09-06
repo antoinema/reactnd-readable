@@ -5,6 +5,8 @@ export const SORT_POST_BY_DATE = 'SORT_POST_BY_DATE'
 export const SORT_POST_BY_POPULARITY = 'SORT_POST_BY_POPULARITY'
 export const SORT_POST_BY_VOTES = 'SORT_POST_BY_VOTES'
 export const SET_CURRENT_CATEGORY = 'SET_CATEGORY'
+export const SORT_COMMENTS_BY_DATE = 'SORT_COMMENTS_BY_DATE'
+export const SORT_COMMENTS_BY_VOTES = 'SORT_COMMENTS_BY_VOTES'
 
 export function showCommentEdit(commentId) {
   return {
@@ -27,6 +29,12 @@ export function setErrorMessage(message) {
 }
 
 export function setSortPostFunction(sortBy) {
+  return {
+    type: sortBy
+  }
+}
+
+export function setSortCommentFunction(sortBy) {
   return {
     type: sortBy
   }

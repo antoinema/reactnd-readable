@@ -6,14 +6,15 @@ import Post from '../components/Post'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import Loading from '../components/Loading'
-import { getCommentsForId } from '../reducers'
+import { getSortedComments } from '../selectors'
 import CommentFormContainer from './CommentFormContainer'
 import Modal, { ModalCardFooter } from '../components/Modal'
 import Comments from '../components/Comments'
 import {
   showCommentEdit,
   hideCommentEdit,
-  setErrorMessage
+  setErrorMessage,
+  setSortCommentFunction
 } from '../actions/ui'
 import { submit } from 'redux-form'
 
@@ -34,7 +35,8 @@ class PostDetail extends Component {
     deletePost: PropTypes.func.isRequired,
     currentlyEditingComment: PropTypes.string,
     setErrorMessage: PropTypes.func.isRequired,
-    location: PropTypes.object
+    location: PropTypes.object,
+    setSortCommentsFunction: PropTypes.func.isRequired
   }
 
   state = {
@@ -103,7 +105,8 @@ class PostDetail extends Component {
       isFetching,
       isEditingComment,
       currentlyEditingComment,
-      setErrorMessage
+      setErrorMessage,
+      setSortCommentsFunction
     } = this.props
     if (isFetching) return <Loading />
     if (!post) {
@@ -114,7 +117,8 @@ class PostDetail extends Component {
     return (
       <div className="section">
         <Post key={post.id} post={post} deletePost={this.handleDeletePost}>
-          {comments && <Comments comments={comments} />}
+          {comments &&
+            <Comments comments={comments} onSort={setSortCommentsFunction} />}
           <CommentFormContainer parentPostId={post.id} showSubmit={true} />
         </Post>
         {isEditingComment && this.renderModal(currentlyEditingComment, post.id)}
@@ -131,7 +135,7 @@ function mapStateToProps(state, ownProps) {
 
   return {
     post: posts.postsById[postId],
-    comments: getCommentsForId(state, postId),
+    comments: getSortedComments(state, postId),
     isFetching,
     isEditingComment,
     currentlyEditingComment
@@ -146,7 +150,8 @@ function mapDispatchToProps(dispatch) {
     hideCommentEdit: () => dispatch(hideCommentEdit()),
     submitEditComment: () => dispatch(submit('comments')),
     deletePost: data => dispatch(deletePost(data)),
-    setErrorMessage: data => dispatch(setErrorMessage(data))
+    setErrorMessage: data => dispatch(setErrorMessage(data)),
+    setSortCommentsFunction: data => dispatch(setSortCommentFunction(data))
   }
 }
 

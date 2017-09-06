@@ -24,3 +24,19 @@ export const getVisiblePostsSorted = createSelector(
   [getVisiblePosts, getSortBy],
   (visiblePosts, sortBy) => visiblePosts.sort(sortBy)
 )
+
+const getCommentSortBy = state => state.ui.sortCommentsBy
+
+const getCommentsForId = (state, postId) => {
+  const post = state.posts.postsById[postId]
+  return (
+    post && post.comments && post.comments.map(id => state.commentsById[id])
+  )
+}
+
+export const getSortedComments = createSelector(
+  [getCommentsForId, getCommentSortBy],
+  (commentsForId, sortBy) => {
+    return commentsForId && commentsForId.sort(sortBy)
+  }
+)

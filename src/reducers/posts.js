@@ -14,12 +14,6 @@ import {
   DELETE_COMMENT_SUCCESS
 } from '../actions/comments'
 
-import {
-  SORT_POST_BY_DATE,
-  SORT_POST_BY_POPULARITY,
-  SORT_POST_BY_VOTES
-} from '../actions/ui'
-
 function addEditPostEntry(state, post) {
   return {
     ...state,
@@ -93,13 +87,6 @@ function allPostsIds(state = [], action) {
     default:
       return state
   }
-}
-
-export const getCommentsForId = (state, postId) => {
-  const post = state.posts.postsById[postId]
-  return (
-    post && post.comments && post.comments.map(id => state.commentsById[id])
-  )
 }
 
 function addComment(state, comment) {

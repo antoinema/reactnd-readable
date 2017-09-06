@@ -19,6 +19,8 @@ import {
   SORT_POST_BY_DATE,
   SORT_POST_BY_POPULARITY,
   SORT_POST_BY_VOTES,
+  SORT_COMMENTS_BY_DATE,
+  SORT_COMMENTS_BY_VOTES,
   SET_CURRENT_CATEGORY
 } from '../actions/ui'
 
@@ -87,6 +89,17 @@ function sortBy(state = SORT_POST_BY_DATE, action) {
   }
 }
 
+function sortCommentsBy(state = SORT_COMMENTS_BY_DATE, action) {
+  switch (action.type) {
+    case SORT_COMMENTS_BY_DATE:
+      return sortByMoreRecent
+    case SORT_COMMENTS_BY_VOTES:
+      return sortByVote
+    default:
+      return state
+  }
+}
+
 function currentCategory(state = '/', action) {
   switch (action.type) {
     case SET_CURRENT_CATEGORY:
@@ -102,7 +115,8 @@ const ui = combineReducers({
   isEditingComment,
   currentlyEditingComment,
   sortBy,
-  currentCategory
+  currentCategory,
+  sortCommentsBy
 })
 
 export default ui
