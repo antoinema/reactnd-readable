@@ -2,74 +2,73 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Field, reduxForm } from 'redux-form'
 import { withRouter } from 'react-router-dom'
+import Input from './FormFields/Input'
+import Select from './FormFields/Select'
+import TextArea from './FormFields/TextArea'
+
+const validate = values => {
+  const errors = {}
+  if (!values.author) {
+    errors.author = 'Required'
+  } else if (values.author.length < 2) {
+    errors.author = 'Must be 3 characters or more'
+  }
+  if (!values.title) {
+    errors.title = 'Required'
+  } else if (values.title.length < 9) {
+    errors.title = 'Must be 10 characters or more'
+  }
+  if (!values.body) {
+    errors.body = 'Required'
+  } else if (values.body.length < 19) {
+    errors.body = 'Must be 20 characters or more'
+  }
+
+  if (!values.category) {
+    errors.category = 'Required'
+  }
+  return errors
+}
 
 class PostForm extends Component {
   cancel = e => {
     e.preventDefault()
     this.props.history.goBack()
   }
+
   render() {
     const { handleSubmit, categories, submitting } = this.props
 
     return (
       <section className="section">
         <form onSubmit={handleSubmit}>
-          <div className="field">
-            <label className="label">Author</label>
-            <div className="control has-icons-left">
-              <Field
-                type="text"
-                placeholder="Text input"
-                name="author"
-                component="input"
-                className="input"
-              />
-              <span className="icon is-small is-left">
-                <i className="fa fa-user" />
-              </span>
-            </div>
-          </div>
+          <Field
+            name="author"
+            label="Author"
+            component={Input}
+            placeholder="Your name"
+          />
+          <Field name="category" label="Category" component={Select}>
+            <option value="">Select Category</option>
+            {categories.map(category =>
+              <option key={category.path} value={category.name}>
+                {category.name}
+              </option>
+            )}
+          </Field>
+          <Field
+            name="title"
+            label="Title"
+            component={Input}
+            placeholder="Enter your post title"
+          />
 
-          <div className="field">
-            <label className="label">Category</label>
-            <div className="control">
-              <div className="select">
-                <Field name="category" component="select">
-                  <option value="">Select Category</option>
-                  {categories.map(category =>
-                    <option key={category.path} value={category.name}>
-                      {category.name}
-                    </option>
-                  )}
-                </Field>
-              </div>
-            </div>
-          </div>
-
-          <div className="field">
-            <label className="label">Title</label>
-            <div className="control">
-              <Field
-                type="text"
-                placeholder="Text input"
-                name="title"
-                component="input"
-                className="input"
-              />
-            </div>
-          </div>
-
-          <div className="field">
-            <label className="label">Message</label>
-            <div className="control">
-              <Field
-                className="textarea"
-                placeholder="Textarea"
-                name="body"
-                component="textarea"
-              />
-            </div>
-          </div>
+          <Field
+            name="body"
+            label="Message"
+            component={TextArea}
+            placeholder=""
+          />
 
           <div className="field is-grouped">
             <div className="control">
@@ -105,6 +104,7 @@ PostForm.propTypes = {
 export default withRouter(
   reduxForm({
     form: 'posts',
+    validate,
     enableReinitialize: true
   })(PostForm)
 )

@@ -65,7 +65,7 @@ function currentlyEditingComment(state = null, action) {
 
 function errorMessage(state = null, action) {
   const { error } = action
-  if (error) {
+  if (error && typeof error === 'string') {
     return action.error
   }
   switch (action.type) {
