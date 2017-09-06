@@ -56,7 +56,7 @@ function Post(props) {
             <strong>
               <Link
                 to={{
-                  pathname: `/posts/${post.id}`,
+                  pathname: `/category/${post.category}/${post.id}`,
                   state: { from: props.location.pathname }
                 }}
               >
@@ -86,8 +86,8 @@ function Post(props) {
           <p className="control">
             <Link
               to={{
-                pathname: `/posts/${post.id}/edit`,
-                state: { from: props.location.pathname }
+                pathname: `/category/${post.category}/${post.id}/edit`,
+                state: { from: `/category/${post.category}` }
               }}
               className="button"
             >

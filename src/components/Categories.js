@@ -16,7 +16,6 @@ function Categories(props) {
       <CategoryLink
         name="All"
         path="/"
-        to="/"
         current={props.current}
         onClick={props.onClick}
         key={'/'}
@@ -26,7 +25,6 @@ function Categories(props) {
           <CategoryLink
             name={category.name}
             path={category.path}
-            to={`/category/${category.path}`}
             current={props.current}
             onClick={props.onClick}
             key={category.path}

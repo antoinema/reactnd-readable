@@ -21,10 +21,18 @@ class App extends Component {
         <Route path="/" component={Header} />
         {errorMessage && <ErrorMessage errorMessage={errorMessage} />}
         <Route exact path="/" component={PostsPage} />
-        <Route exact path="/category/:category" component={PostsPage} />
+        <Route exact path="/:category" component={PostsPage} />
         <Route exact path="/post/new" component={PostFormContainer} />
-        <Route exact path="/posts/:postId/edit" component={PostFormContainer} />
-        <Route exact path="/posts/:postId" component={PostDetail} />
+        <Route
+          exact
+          path="/category/:category/:postId/edit"
+          component={PostFormContainer}
+        />
+        <Route
+          exact
+          path="/category/:category/:postId"
+          component={PostDetail}
+        />
       </div>
     )
   }

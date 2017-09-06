@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 class Stats extends Component {
   static propTypes = {
     nbPost: PropTypes.number.isRequired,
-    children: PropTypes.node
+    children: PropTypes.node,
+    location: PropTypes.object
   }
   render() {
     return (
@@ -19,7 +20,13 @@ class Stats extends Component {
                 </p>
               </div>
               <p className="level-item">
-                <Link to="/post/new" className="button is-primary">
+                <Link
+                  className="button is-primary"
+                  to={{
+                    pathname: '/post/new',
+                    state: { from: this.props.location.pathname }
+                  }}
+                >
                   New
                 </Link>
               </p>
@@ -32,4 +39,4 @@ class Stats extends Component {
   }
 }
 
-export default Stats
+export default withRouter(Stats)

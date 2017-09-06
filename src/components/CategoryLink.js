@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 
 const CategoryLink = props => {
-  const { path, name, onClick, current, to } = props
+  const { path, name, onClick, current } = props
   const handleOnClick = () => {
     onClick(path)
   }
@@ -13,7 +13,7 @@ const CategoryLink = props => {
         ? <strong className="is-capitalized">
           {name}
         </strong>
-        : <Link to={to} className="is-capitalized" onClick={handleOnClick}>
+        : <Link to={path} className="is-capitalized" onClick={handleOnClick}>
           {name}
         </Link>}
     </p>
@@ -24,8 +24,7 @@ CategoryLink.propTypes = {
   path: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   onClick: PropTypes.func.isRequired,
-  current: PropTypes.string.isRequired,
-  to: PropTypes.string.isRequired
+  current: PropTypes.string.isRequired
 }
 
 export default CategoryLink

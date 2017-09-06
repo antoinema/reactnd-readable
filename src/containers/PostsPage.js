@@ -20,18 +20,17 @@ class PostsPage extends Component {
   }
 
   componentWillMount() {
-    const {
-      loadPosts,
-      loadCategories,
-      loadComments,
-      match,
-      setCategory
-    } = this.props
+    const { loadPosts, loadCategories, loadComments } = this.props
     loadPosts().then(() =>
       this.props.posts.forEach(post => loadComments(post.id))
     ) // we load comments to be able to display their number
     loadCategories()
-    match.params.category && setCategory(match.params.category)
+  }
+
+  componentWillReceiveProps(newProps) {
+    const { setCategory, currentCategory } = this.props
+    const newCategory = newProps.match.params.category || '/'
+    currentCategory !== newCategory && setCategory(newCategory)
   }
 
   renderPost = post => {
