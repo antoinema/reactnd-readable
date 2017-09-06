@@ -15,9 +15,6 @@ const rootReducer = combineReducers({
 
 export default rootReducer
 
-export const getVisiblePosts = (state, filter) =>
-  fromPosts.getVisiblePosts(state.posts, filter)
-
 export const getCommentsForId = (state, postId) =>
   fromPosts.getCommentsForId(state, postId)
 

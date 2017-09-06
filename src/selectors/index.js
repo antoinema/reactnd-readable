@@ -1,18 +1,26 @@
 import { createSelector } from 'reselect'
 
-const getVisibilityFilter = state => state.visibilityFilter
-const getTodos = state => state.todos
-
-export const getVisibleTodos = createSelector(
-  [getVisibilityFilter, getTodos],
-  (visibilityFilter, todos) => {
-    switch (visibilityFilter) {
-      case 'SHOW_ALL':
-        return todos
-      case 'SHOW_COMPLETED':
-        return todos.filter(t => t.completed)
-      case 'SHOW_ACTIVE':
-        return todos.filter(t => !t.completed)
+const getCategory = state => state.ui.currentCategory
+const getAllPosts = state => {
+  return state.posts.allPostsIds.map(id => state.posts.postsById[id])
+}
+export const getVisiblePosts = createSelector(
+  [getCategory, getAllPosts],
+  (currentCategory, allPosts) => {
+    switch (currentCategory) {
+      case '/': // all posts
+        return allPosts.filter(p => !p.deleted)
+      default:
+        return allPosts.filter(
+          p => !p.deleted && p.category === currentCategory
+        )
     }
   }
+)
+
+const getSortBy = state => state.ui.sortBy
+
+export const getVisiblePostsSorted = createSelector(
+  [getVisiblePosts, getSortBy],
+  (visiblePosts, sortBy) => visiblePosts.sort(sortBy)
 )

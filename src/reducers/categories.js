@@ -5,7 +5,10 @@ export default function categories(state = null, action) {
     case LOAD_CATEGORIES_SUCCESS:
       return action.response.categories.reduce(
         (categoriesAccumulator, category) => {
-          categoriesAccumulator[category.name] = category
+          categoriesAccumulator[category.path] = {
+            path: category.name,
+            name: category.name
+          }
           return categoriesAccumulator
         },
         {}

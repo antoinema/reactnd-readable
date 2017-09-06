@@ -18,7 +18,8 @@ import {
   SET_ERROR_MESSAGE,
   SORT_POST_BY_DATE,
   SORT_POST_BY_POPULARITY,
-  SORT_POST_BY_VOTES
+  SORT_POST_BY_VOTES,
+  SET_CURRENT_CATEGORY
 } from '../actions/ui'
 
 function isFetching(state = true, action) {
@@ -86,12 +87,22 @@ function sortBy(state = SORT_POST_BY_DATE, action) {
   }
 }
 
+function currentCategory(state = '/', action) {
+  switch (action.type) {
+    case SET_CURRENT_CATEGORY:
+      return action.category
+    default:
+      return state
+  }
+}
+
 const ui = combineReducers({
   isFetching,
   errorMessage,
   isEditingComment,
   currentlyEditingComment,
-  sortBy
+  sortBy,
+  currentCategory
 })
 
 export default ui

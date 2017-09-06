@@ -90,30 +90,8 @@ function allPostsIds(state = [], action) {
       return addPostId(state, response)
     case LOAD_POSTS_SUCCESS:
       return response.map(post => post.id)
-    case SORT_POST_BY_DATE:
-    case SORT_POST_BY_POPULARITY:
-    case SORT_POST_BY_VOTES:
-      return state
-        .concat() // create a new object
-        .sort((id1, id2) =>
-          action.sortBy(state.postsById[id1], state.postsById[id2])
-        )
     default:
       return state
-  }
-}
-
-const getAllPosts = state => {
-  return state.allPostsIds.map(id => state.postsById[id])
-}
-
-export const getVisiblePosts = (state, filter) => {
-  const allPosts = getAllPosts(state)
-  switch (filter) {
-    case 'all':
-      return allPosts.filter(p => !p.deleted)
-    default:
-      return allPosts.filter(p => p.category === filter && !p.deleted)
   }
 }
 
