@@ -87,7 +87,7 @@ function Post(props) {
             <Link
               to={{
                 pathname: `/category/${post.category}/${post.id}/edit`,
-                state: { from: `/category/${post.category}` }
+                state: { from: props.location.pathname }
               }}
               className="button"
             >
