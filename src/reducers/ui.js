@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux'
+import { sortByVote, sortByMoreRecent, sortByMostComments } from '../utils/sort'
 
 import {
   LOAD_POST_REQUEST,
@@ -14,7 +15,10 @@ import { SUBMIT_COMMENT_SUCCESS } from '../actions/comments'
 import {
   SHOW_COMMENT_EDIT,
   HIDE_COMMENT_EDIT,
-  SET_ERROR_MESSAGE
+  SET_ERROR_MESSAGE,
+  SORT_POST_BY_DATE,
+  SORT_POST_BY_POPULARITY,
+  SORT_POST_BY_VOTES
 } from '../actions/ui'
 
 function isFetching(state = true, action) {
@@ -69,11 +73,25 @@ function errorMessage(state = null, action) {
   }
 }
 
+function sortBy(state = SORT_POST_BY_DATE, action) {
+  switch (action.type) {
+    case SORT_POST_BY_DATE:
+      return sortByMoreRecent
+    case SORT_POST_BY_VOTES:
+      return sortByVote
+    case SORT_POST_BY_POPULARITY:
+      return sortByMostComments
+    default:
+      return state
+  }
+}
+
 const ui = combineReducers({
   isFetching,
   errorMessage,
   isEditingComment,
-  currentlyEditingComment
+  currentlyEditingComment,
+  sortBy
 })
 
 export default ui

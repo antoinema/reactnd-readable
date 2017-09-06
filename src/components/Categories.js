@@ -1,8 +1,15 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
-
+import {
+  SORT_POST_BY_DATE,
+  SORT_POST_BY_POPULARITY,
+  SORT_POST_BY_VOTES
+} from '../actions/ui'
 function Categories(props) {
+  const handleChange = event => {
+    props.onSort(event.target.value)
+  }
   return (
     <div className="level-right">
       <p className="level-item">
@@ -30,8 +37,10 @@ function Categories(props) {
       <div className="level-item">Sort:</div>
       <div className="level-item">
         <span className="select">
-          <select>
-            <option>Date created</option>
+          <select onChange={handleChange}>
+            <option value={SORT_POST_BY_DATE}>Date created</option>
+            <option value={SORT_POST_BY_VOTES}>Votes</option>
+            <option value={SORT_POST_BY_POPULARITY}>Popularity</option>
           </select>
         </span>
       </div>
@@ -41,7 +50,8 @@ function Categories(props) {
 
 Categories.propTypes = {
   categories: PropTypes.array,
-  current: PropTypes.string
+  current: PropTypes.string,
+  onSort: PropTypes.func.isRequired
 }
 
 export default Categories

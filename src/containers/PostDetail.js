@@ -90,7 +90,10 @@ class PostDetail extends Component {
   }
 
   handleDeletePost = post => {
-    this.props.deletePost(post).then(() => this.props.history.push('/'))
+    const from = this.props.location.state
+      ? this.props.location.state.from || '/'
+      : '/'
+    this.props.deletePost(post).then(() => this.props.history.push(from))
   }
 
   render() {
@@ -125,8 +128,6 @@ function mapStateToProps(state, ownProps) {
   const { isFetching, isEditingComment, currentlyEditingComment } = ui
   const { match } = ownProps
   const postId = match.params.postId
-  console.log('kikkoo')
-  console.log(getCommentsForId(state, postId))
 
   return {
     post: posts.postsById[postId],

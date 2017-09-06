@@ -14,6 +14,12 @@ import {
   DELETE_COMMENT_SUCCESS
 } from '../actions/comments'
 
+import {
+  SORT_POST_BY_DATE,
+  SORT_POST_BY_POPULARITY,
+  SORT_POST_BY_VOTES
+} from '../actions/ui'
+
 function addEditPostEntry(state, post) {
   return {
     ...state,
@@ -84,6 +90,14 @@ function allPostsIds(state = [], action) {
       return addPostId(state, response)
     case LOAD_POSTS_SUCCESS:
       return response.map(post => post.id)
+    case SORT_POST_BY_DATE:
+    case SORT_POST_BY_POPULARITY:
+    case SORT_POST_BY_VOTES:
+      return state
+        .concat() // create a new object
+        .sort((id1, id2) =>
+          action.sortBy(state.postsById[id1], state.postsById[id2])
+        )
     default:
       return state
   }

@@ -1,7 +1,7 @@
 const api = 'http://localhost:5001'
 
 // Generate a unique token for indentifying the backend server.
-let token = localStorage.token
+let token = '123'
 if (!token) token = localStorage.token = Math.random().toString(36).substr(-8)
 
 const headers = {

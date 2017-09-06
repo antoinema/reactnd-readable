@@ -14,7 +14,7 @@ function List(props) {
     return (
       <div className="section">
         <article className="message">
-          <div className="message-body">No posts</div>
+          <div className="message-body">Nothing</div>
         </article>
       </div>
     )

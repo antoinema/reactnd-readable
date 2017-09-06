@@ -10,10 +10,15 @@ import { getVisiblePosts } from '../reducers'
 import { getCategories } from '../reducers'
 import { withRouter } from 'react-router-dom'
 import { loadComments } from '../actions/comments'
+import { setSortPostFunction } from '../actions/ui'
 
 import React, { Component } from 'react'
 
 class PostsPage extends Component {
+  state = {
+    triggerSort: false
+  }
+
   componentWillMount() {
     const { loadPosts, loadCategories, loadComments } = this.props
     loadPosts().then(() =>
@@ -24,23 +29,30 @@ class PostsPage extends Component {
 
   renderPost = post => {
     if (post.deleted) return
-    //if (!post.comment) this.props.loadComments(post.id)
     return <Post key={post.id} post={post} deletePost={this.props.deletePost} />
   }
 
   render() {
+    const {
+      posts,
+      categories,
+      category,
+      isFetching,
+      setSortPostFunction
+    } = this.props
     return (
       <div className="container">
-        <PostPageHeader nbPost={this.props.posts.length}>
+        <PostPageHeader nbPost={posts.length}>
           <Categories
-            categories={this.props.categories}
-            current={this.props.category}
+            categories={categories}
+            current={category}
+            onSort={setSortPostFunction}
           />
         </PostPageHeader>
         <List
           renderItem={this.renderPost}
-          items={this.props.posts}
-          isFetching={this.props.isFetching}
+          items={posts}
+          isFetching={isFetching}
         />
       </div>
     )
@@ -55,16 +67,18 @@ PostsPage.propTypes = {
   loadCategories: PropTypes.func.isRequired,
   deletePost: PropTypes.func.isRequired,
   category: PropTypes.string.isRequired,
-  loadComments: PropTypes.func.isRequired
+  loadComments: PropTypes.func.isRequired,
+  setSortPostFunction: PropTypes.func.isRequired,
+  sortBy: PropTypes.func.isRequired
 }
 
 function mapStateToProps(state, ownProps) {
   const category = ownProps.match.params.category || 'all'
-
+  const { isFetching } = state.ui
   return {
     posts: getVisiblePosts(state, category),
     categories: getCategories(state),
-    isFetching: state.ui.isFetching,
+    isFetching: isFetching,
     category
   }
 }
@@ -74,7 +88,8 @@ function mapDispatchToProps(dispatch) {
     loadPosts: () => dispatch(loadPosts()),
     loadCategories: () => dispatch(loadCategories()),
     deletePost: data => dispatch(deletePost(data)),
-    loadComments: data => dispatch(loadComments(data))
+    loadComments: data => dispatch(loadComments(data)),
+    setSortPostFunction: data => dispatch(setSortPostFunction(data))
   }
 }
 

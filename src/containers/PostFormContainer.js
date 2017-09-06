@@ -38,8 +38,19 @@ function mapStateToProps(state, ownProps) {
   const isFetching = ui.isFetching
   const { match } = ownProps
   const postId = ownProps.postId || match.params.postId
+  const post = posts.postsById[postId]
+  const initialValues = post // this is needed other the form will return the comments and the dumb server will store and return them
+    ? {
+      id: post.id,
+      author: post.author,
+      body: post.body,
+      category: post.category,
+      title: post.title
+    }
+    : null
+
   return {
-    initialValues: posts.postsById[postId],
+    initialValues,
     isFetching,
     categories: getCategories(state)
   }

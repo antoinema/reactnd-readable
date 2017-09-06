@@ -54,7 +54,12 @@ function Post(props) {
         <div className="content">
           <p>
             <strong>
-              <Link to={`/posts/${post.id}`}>
+              <Link
+                to={{
+                  pathname: `/posts/${post.id}`,
+                  state: { from: props.location.pathname }
+                }}
+              >
                 {post.title}
               </Link>
             </strong>{' '}
