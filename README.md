@@ -19,7 +19,7 @@ The Readable app is an anonymous content and comment system. It showcases the us
 ## User interface
 The user interface relies on [Bulma CSS framework](http://bulma.io/)
 
-
 ## Areas of improvement
-* Update the UI before the API returns to get a more responsive UX
+* Update the UI before the API returns a response to get a more responsive UX
 * Auto select category on new post creation (with the currently selected category)
+* Validate comments creation and edition
