@@ -10,7 +10,7 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 
 class PostFormContainer extends Component {
-  componentWillMount() {
+  componentDidMount() {
     const { match, loadPost, loadCategories } = this.props
     const postId = this.props.postId || match.params.postId
     loadCategories()

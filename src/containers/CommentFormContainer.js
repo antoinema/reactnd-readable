@@ -9,7 +9,7 @@ import { withRouter } from 'react-router-dom'
 import { reset } from 'redux-form'
 
 class CommentFormContainer extends Component {
-  componentWillMount() {
+  componentDidMount() {
     const { loadComment } = this.props
     const commentId = this.props.commentId
 

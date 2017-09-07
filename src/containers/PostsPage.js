@@ -27,7 +27,7 @@ class PostsPage extends Component {
     )
   }
 
-  componentWillMount() {
+  componentDidMount() {
     const { loadCategories, currentCategory } = this.props
     // we load comments to be able to display their number
     loadCategories()

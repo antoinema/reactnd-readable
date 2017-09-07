@@ -51,7 +51,7 @@ class PostDetail extends Component {
     this.setState({ modalIsOpen: false })
   }
 
-  componentWillMount() {
+  componentDidMount() {
     const { match, loadPost, loadComments } = this.props
     const postId = match.params.postId
     loadPost(postId)
