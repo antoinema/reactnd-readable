@@ -5,14 +5,14 @@ export const LOAD_POSTS_REQUEST = 'LOAD_POSTS_REQUEST'
 export const LOAD_POSTS_SUCCESS = 'LOAD_POSTS_SUCCESS'
 export const LOAD_POSTS_FAILURE = 'LOAD_POSTS_FAILURE'
 
-export function loadPosts() {
+export function loadPosts(categ) {
   return {
     // Types of actions to emit before and after
     types: [LOAD_POSTS_REQUEST, LOAD_POSTS_SUCCESS, LOAD_POSTS_FAILURE],
     // Check the cache (optional):
     shouldCallAPI: state => !state.posts.allPostsById,
     // Perform the fetching:
-    callAPI: () => ReadableAPI.getAllPosts(),
+    callAPI: () => ReadableAPI.getPosts(categ),
     // Arguments to inject in begin/end actions
     payload: {}
   }

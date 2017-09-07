@@ -22,7 +22,7 @@ const getSortBy = state => state.ui.sortBy
 
 export const getVisiblePostsSorted = createSelector(
   [getVisiblePosts, getSortBy],
-  (visiblePosts, sortBy) => visiblePosts.sort(sortBy)
+  (visiblePosts, sortBy) => visiblePosts.sort(sortBy.func)
 )
 
 const getCommentSortBy = state => state.ui.sortCommentsBy

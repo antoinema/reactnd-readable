@@ -76,14 +76,17 @@ function errorMessage(state = null, action) {
   }
 }
 
-function sortBy(state = SORT_POST_BY_DATE, action) {
+function sortBy(
+  state = { type: SORT_POST_BY_VOTES, func: sortByVote },
+  action
+) {
   switch (action.type) {
     case SORT_POST_BY_DATE:
-      return sortByMoreRecent
+      return { type: SORT_POST_BY_DATE, func: sortByMoreRecent }
     case SORT_POST_BY_VOTES:
-      return sortByVote
+      return { type: SORT_POST_BY_VOTES, func: sortByVote }
     case SORT_POST_BY_POPULARITY:
-      return sortByMostComments
+      return { type: SORT_POST_BY_POPULARITY, func: sortByMostComments }
     default:
       return state
   }

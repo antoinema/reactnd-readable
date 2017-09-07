@@ -33,9 +33,9 @@ function Categories(props) {
       <div className="level-item">Sort:</div>
       <div className="level-item">
         <span className="select">
-          <select onChange={handleChange}>
-            <option value={SORT_POST_BY_DATE}>Date created</option>
+          <select onChange={handleChange} value={props.currentPostSort}>
             <option value={SORT_POST_BY_VOTES}>Votes</option>
+            <option value={SORT_POST_BY_DATE}>Date created</option>
             <option value={SORT_POST_BY_POPULARITY}>Popularity</option>
           </select>
         </span>
@@ -48,7 +48,8 @@ Categories.propTypes = {
   categories: PropTypes.array,
   current: PropTypes.string,
   onSort: PropTypes.func.isRequired,
-  onClick: PropTypes.func.isRequired
+  onClick: PropTypes.func.isRequired,
+  currentPostSort: PropTypes.string.isRequired
 }
 
 export default Categories

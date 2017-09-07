@@ -19,18 +19,27 @@ class PostsPage extends Component {
     triggerSort: false
   }
 
-  componentWillMount() {
-    const { loadPosts, loadCategories, loadComments } = this.props
-    loadPosts().then(() =>
+  loadData = categ => {
+    // we only load what we need not all the posts unless no categ is chosen
+    const { loadPosts, loadComments } = this.props
+    loadPosts(categ).then(() =>
       this.props.posts.forEach(post => loadComments(post.id))
-    ) // we load comments to be able to display their number
+    )
+  }
+
+  componentWillMount() {
+    const { loadCategories, currentCategory } = this.props
+    // we load comments to be able to display their number
     loadCategories()
+    this.loadData(currentCategory)
   }
 
   componentWillReceiveProps(newProps) {
     const { setCategory, currentCategory } = this.props
     const newCategory = newProps.match.params.category || '/'
-    currentCategory !== newCategory && setCategory(newCategory)
+    currentCategory !== newCategory &&
+      setCategory(newCategory) &&
+      this.loadData(newCategory)
   }
 
   renderPost = post => {
@@ -45,7 +54,8 @@ class PostsPage extends Component {
       currentCategory,
       isFetching,
       setSortPostFunction,
-      setCategory
+      setCategory,
+      currentSort
     } = this.props
     return (
       <div className="container">
@@ -55,6 +65,7 @@ class PostsPage extends Component {
             current={currentCategory}
             onSort={setSortPostFunction}
             onClick={setCategory}
+            currentPostSort={currentSort}
           />
         </PostPageHeader>
         <List
@@ -77,18 +88,19 @@ PostsPage.propTypes = {
   currentCategory: PropTypes.string.isRequired,
   loadComments: PropTypes.func.isRequired,
   setSortPostFunction: PropTypes.func.isRequired,
-  sortBy: PropTypes.func.isRequired,
+  currentSort: PropTypes.string.isRequired,
   setCategory: PropTypes.func.isRequired,
   match: PropTypes.object.isRequired
 }
 
 function mapStateToProps(state) {
-  const { isFetching, currentCategory } = state.ui
+  const { isFetching, currentCategory, sortBy } = state.ui
   return {
     posts: getVisiblePostsSorted(state),
     categories: getCategories(state),
     isFetching: isFetching,
-    currentCategory
+    currentCategory,
+    currentSort: sortBy.type
   }
 }
 function mapDispatchToProps(dispatch) {

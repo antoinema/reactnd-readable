@@ -11,7 +11,10 @@ const headers = {
 }
 
 export const getPost = postId => fetch(`${api}/posts/${postId}`, { headers })
-export const getAllPosts = () => fetch(`${api}/posts`, { headers })
+export const getPosts = categ =>
+  categ
+    ? fetch(`${api}/${categ}/posts`, { headers })
+    : fetch(`${api}/posts`, { headers })
 
 export const getComment = commentId =>
   fetch(`${api}/comments/${commentId}`, { headers })
